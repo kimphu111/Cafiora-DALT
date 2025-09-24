@@ -1,0 +1,92 @@
+:host {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 90vw;
+  height: 70vh;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* the sliding track */
+.track {
+  display: flex;
+  height: 100%;
+  transition: transform 1s ease; // 'chạy từ từ' -> transition 1s
+}
+
+/* each slide */
+.slide {
+  flex: 0 0 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* dots */
+.dots {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  opacity: 0.5;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+}
+
+.dots button.active {
+  transform: scale(1.4);
+  opacity: 1;
+}
+
+/* nav arrows */
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 6;
+}
+.nav.prev {
+  left: 10px;
+}
+.nav.next {
+  right: 10px;
+}
+
+@media (max-width: 768px) {
+  .carousel {
+    height: 200px;
+  }
+}

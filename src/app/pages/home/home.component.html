@@ -1,0 +1,16 @@
+<div class="carousel" (mouseenter)="pause()" (mouseleave)="play()">
+  <div class="track" [style.transform]="trackTransform">
+    <div class="slide" *ngFor="let img of images; let i = index">
+      <img [src]="img" [alt]="'Carousel ' + (i + 1)" />
+      <div class="caption">Carousel {{ i + 1 }}</div>
+    </div>
+  </div>
+
+  <div class="dots">
+    <button
+      *ngFor="let _ of images; let i = index"
+      [class.active]="i === currentIndex"
+      (click)="goTo(i)"
+    ></button>
+  </div>
+</div>
