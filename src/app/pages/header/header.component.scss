@@ -2,7 +2,7 @@ header {
   background-color: #f8f9fa;
   padding: 10px 100px;
   border-bottom: 1px solid #e0e0e0;
-  height: 100px;
+  height: 80px;
   font-family: 'Lalezar', cursive;
 
   .navbar {
@@ -10,6 +10,7 @@ header {
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    padding: 0 40px;
 
     .nav-brand {
       width: 100px;
@@ -34,6 +35,7 @@ header {
       height: 100%;
       font-size: 24px;
       position: relative;
+      //margin-left: 200px;
 
       li {
         display: flex;
