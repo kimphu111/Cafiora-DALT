@@ -15,6 +15,8 @@ header {
     .nav-brand {
       width: 100px;
       object-fit: contain;
+      cursor: pointer;
+      display: inline-block; // giữ kích thước bao quanh logo
 
       img {
         width: 100%;
@@ -35,7 +37,6 @@ header {
       height: 100%;
       font-size: 24px;
       position: relative;
-      //margin-left: 200px;
 
       li {
         display: flex;
