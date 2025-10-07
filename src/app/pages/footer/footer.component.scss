@@ -1,9 +1,9 @@
 footer {
   background-color: #BEAA96;
   color: #fff;
-  width: 100%;        /* phủ đủ chiều ngang */
-  margin: 0;          /* chắc chắn không có khoảng trắng */
-  padding: 20px 0;    /* chỉ padding trên/dưới */
+  width: 100vw;
+  margin: 0;
+  padding: 20px 0;
 
   .footer-content {
     display: flex;
@@ -11,9 +11,9 @@ footer {
     align-items: flex-start;
     flex-wrap: wrap;
 
-    width: 1300px; /* khung nội dung */
-    margin: 0 auto;    /* căn giữa */
-    padding: 0 40px;   /* khoảng cách 2 bên */
+    width: 1300px;
+    margin: 0 auto;
+    padding: 0 40px;
     gap: 120px;
   }
 

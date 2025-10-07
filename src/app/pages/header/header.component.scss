@@ -104,4 +104,33 @@ header {
       }
     }
   }
+
+  .login{
+    background-color: #333333;
+    width: 150px;
+    height: 50px;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition:
+      transform 0.3s ease,
+      background-color 0.3s ease;
+
+    &:hover {
+      background-color: #6f4e37;
+      transform: translateY(-3px);
+    }
+
+    a {
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 500;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
 }

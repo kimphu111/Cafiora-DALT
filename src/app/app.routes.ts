@@ -6,6 +6,8 @@ import { MenuComponent } from './pages/menu/menu.component';
 import { LoginComponent } from './pages/login/login.component';
 import {FooterComponent} from "./pages/footer/footer.component";
 import {RegisterComponent} from './pages/register/register.component';
+import {BaristaComponent} from './pages/barista/barista.component';
+import {CashierComponent} from './pages/cashier/cashier.component';
 export const routes: Routes = [
   {
     path: '',
@@ -21,4 +23,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '**', redirectTo: 'home' },
+  { path :'barista', component: BaristaComponent},
+  { path: 'cashier', component: CashierComponent },
 ];
