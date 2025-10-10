@@ -1,28 +1,9 @@
-const asyncHandler = require('express-async-handler');
-const { DateTime } = require('luxon');
-const { cloudinary } = require('../configs/cloudinaryConfig');
-const User = require('../models/userModel');
-const Product = require('../models/productModel');
-const bcrypt = require('bcrypt'); // hoặc bcrypt
-
-//@desc adminAuth
-//@route GET /api/admin/auth
-//@access private
-// const GetAllData = asyncHandler(async (req, res) => {
-//   try {
-//     const allSongs = await songModel.find(); // lấy tất cả dữ liệu
-//     res.status(200).json({
-//       message: 'lấy dữ liệu thành công',
-//       success: true,
-//       songs: allSongs,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Lỗi khi lấy dữ liệu bài hát', error });
-//   }
-// });
+const asyncHandler = require("express-async-handler");
+const User = require("../models/userModel");
+const bcrypt = require("bcrypt"); // hoặc bcrypt
 
 //@desc Register User
-//@route POST /api/users/register
+//@route POST /api/cashier/register
 //@access public
 const cashierRegister = asyncHandler(async (req, res) => {
   try {
@@ -30,12 +11,12 @@ const cashierRegister = asyncHandler(async (req, res) => {
 
     if (!username || !email || !password) {
       res.status(400);
-      throw new Error('All fields are mandatory!');
+      throw new Error("All fields are mandatory!");
     }
 
-    if (role === 'cashier') {
+    if (role === "cashier") {
       res.status(409);
-      throw new Error('Khong the co cashier thu 2');
+      throw new Error("Khong the co cashier thu 2");
     }
 
     // Check user already exist
@@ -43,12 +24,12 @@ const cashierRegister = asyncHandler(async (req, res) => {
 
     if (userExist) {
       res.status(400);
-      throw new Error('Email is already in use!');
+      throw new Error("Email is already in use!");
     }
 
     //Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('Hashed Password:', hashedPassword);
+    console.log("Hashed Password:", hashedPassword);
 
     const user = await User.create({
       username,
@@ -66,7 +47,7 @@ const cashierRegister = asyncHandler(async (req, res) => {
       });
     } else {
       res.status(400);
-      throw new Error('User data is not valid');
+      throw new Error("User data is not valid");
     }
   } catch (error) {
     res.status(500);
@@ -74,120 +55,56 @@ const cashierRegister = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc adminAuth
-//@route post /api/admin/uploadProduct
+//@desc getAllUser
+//@route POST /api/GetAllUser
 //@access private
-const uploadProduct = asyncHandler(async (req, res) => {
+const getAllUser = asyncHandler(async (req, res) => {
   try {
-    const { nameProduct, price } = req.body;
-    const fileImage = req.image;
-
-    if (!fileImage) {
-      return res.status(400).json({ message: 'No image file uploaded' });
+    const allUser = await User.find(); // lấy tất cả dữ liệu
+    if (!allUser) {
+      return res.status(400).json({
+        message: "Không có dữ liệu người dùng",
+        success: false,
+      });
     }
-    const imageUrl = fileImage.path;
-    const publicId = fileImage.filename;
-
-    if (!nameProduct || !price) {
-      // xóa ảnh nếu thiếu field
-      await cloudinary.uploader.destroy(publicId);
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-
-    const product = await Product.create({
-      nameProduct,
-      price: Number(price),
-      status: true,
-      urlImage: imageUrl,
+    res.status(200).json({
+      message: "lấy dữ liệu thành công",
+      dataUsers: allUser,
+      success: true,
     });
-
-    if (product) {
-      res.status(201).json({ message: 'Upload thành công!', product, success: true });
-    } else {
-      // xóa ảnh nếu tạo thất bại
-      await cloudinary.uploader.destroy(publicId);
-      res.status(400);
-      throw new Error('Song data is not valid');
-    }
-  } catch (err) {
-    if (req.image?.filename) {
-      await cloudinary.uploader.destroy(req.image.filename);
-    }
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: `Lỗi khi lấy dữ liệu người dùng : ${error}` });
   }
 });
 
-// const updateAudio = asyncHandler(async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { title, artist, lyrics } = req.body;
-//     const fileImage = req.image;
-//     const imageUrl = fileImage ? fileImage.path : null; // URL của image (ảnh)
-//     const time = String(DateTime.now().setZone('Asia/Ho_Chi_Minh').toFormat('yyyy-MM-dd HH:mm:ss'));
+//@desc deleteUser
+//@route DELETE /api/deleteUser
+//@access private
+const deleteUser = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(404).json({
+        message: "id khong ton tai hoac sai id",
+        success: false,
+      });
+    }
 
-//     // Lấy thông tin bài hát từ database
-//     const song = await songModel.findById(id);
-//     if (!song) {
-//       return res.status(404).json({ message: 'Không tìm thấy bài hát với ID này' });
-//     }
+    await User.findByIdAndDelete(id);
+    res.status(200).json({
+      message: "xóa dữ liệu người dùng thành công",
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ message: `${error}` });
+  }
+});
 
-//     if (song && song.url_img) {
-//       // Xóa ảnh cũ trên Cloudinary
-//       const publicId = 'audios/' + song.url_img.split('/').pop().split('.')[0]; // Lấy public_id từ URL của ảnh
-//       await cloudinary.uploader.destroy(publicId); // Xóa ảnh trên Cloudinary
-//     }
-
-//     // Chỉ thêm vào updateData những field nào có dữ liệu
-//     const updateData = { releaseDate: time }; // Luôn cập nhật releaseDate
-//     if (title) updateData.title = title;
-//     if (artist) updateData.artist = artist;
-//     if (lyrics) updateData.lyrics = lyrics;
-//     if (imageUrl) updateData.url_img = imageUrl;
-
-//     const updatedSong = await songModel.findByIdAndUpdate(id, updateData, {
-//       new: true,
-//     });
-//     if (updatedSong) {
-//       res.status(200).json({ message: 'Cập nhật thành công!', song: updatedSong });
-//     } else {
-//       res.status(404).json({ message: 'Không tìm thấy bài hát để cập nhật' });
-//     }
-//   } catch (error) {
-//     console.log(error);
-
-//     res.status(500).json({ message: 'Lỗi khi cập nhật bài hát', error: error.message });
-//   }
-// });
-
-// const deleteAudio = asyncHandler(async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     console.log(id);
-
-//     // Lấy thông tin bài hát từ database
-//     const song = await songModel.findById(id);
-//     if (!song) {
-//       return res.status(404).json({ message: 'Không tìm thấy bài hát với ID này' });
-//     }
-//     // Xoá file ảnh trên Cloudinary (nếu có)
-//     if (song.url_img) {
-//       const publicIdImg = 'audios/' + song.url_img.split('/').pop().split('.')[0];
-//       await cloudinary.uploader.destroy(publicIdImg);
-//     }
-
-//     // Xoá file audio trên Cloudinary (nếu có)
-//     if (song.url_audio) {
-//       const publicIdAudio = 'audios/' + song.url_audio.split('/').pop().split('.')[0];
-//       await cloudinary.uploader.destroy(publicIdAudio, {
-//         resource_type: 'video',
-//       });
-//     }
-//     // Xoá khỏi database
-//     await songModel.findByIdAndDelete(id);
-//     res.status(200).json({ message: 'Xoá bài hát thành công', success: true });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Lỗi khi xoá bài hát', error: error.message });
-//   }
-// });
-module.exports = { uploadProduct, cashierRegister };
+module.exports = {
+  cashierRegister,
+  getAllUser,
+  deleteUser,
+};
