@@ -21,7 +21,7 @@ require('express-async-handler');
 // init middlewares
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: ['http://localhost:4200', 'http://127.0.0.1:4200', 'http://localhost:3000'],
     credentials: true, // Cho phép gửi và nhận cookie
   })
 );
