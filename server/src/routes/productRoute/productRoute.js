@@ -6,6 +6,6 @@ const {
 const { GetAllData } = require("../../controllers/productController");
 
 // route nhan du lieu
-router.route("/getProduct").get(validateAccessToken, GetAllData);
+router.route("/getProduct").get(GetAllData);
 
 module.exports = router;
