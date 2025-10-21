@@ -30,6 +30,7 @@ export class LoginComponent {
           localStorage.setItem('token', res.accessToken);
           localStorage.setItem('role', res.role);
           localStorage.setItem('userName', res.username);
+          // localStorage.setItem('refresh Token', res.refreshToken);
           this.router.navigate(['/home']);
 
           if(res.role == 'barista'){
@@ -39,6 +40,9 @@ export class LoginComponent {
             this.router.navigate(['/cashier']);
           }else if(res.role == 'user'){
             this.router.navigate(['/home']);
+          }
+          else if(res.role == 'waiter'){
+            this.router.navigate(['/waiter']);
           }
         }
       },

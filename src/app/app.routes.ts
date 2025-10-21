@@ -8,6 +8,7 @@ import {FooterComponent} from "./pages/footer/footer.component";
 import {RegisterComponent} from './pages/register/register.component';
 import {BaristaComponent} from './pages/barista/barista.component';
 import {CashierComponent} from './pages/cashier/cashier.component';
+import {WaiterComponent} from './pages/waiter/waiter.component';
 export const routes: Routes = [
   {
     path: '',
@@ -22,7 +23,9 @@ export const routes: Routes = [
   },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: '**', redirectTo: 'home' },
+  { path :'waiter', component: WaiterComponent},
   { path :'barista', component: BaristaComponent},
   { path: 'cashier', component: CashierComponent },
+  { path: '**', redirectTo: 'home' },
 ];
+

@@ -49,17 +49,21 @@
     <div class="menu-container">
       <div class="menu-track-wrapper">
         <div class="menu-track" [style.transform]="menuTransform">
-          <div class="menu-item" *ngFor="let item of menuItems">
-            <img [src]="item.img" [alt]="item.name" />
-            <div class="detail-drink">
-              <h3>{{ item.name }}</h3>
-              <p>{{ item.description }}</p>
-              <h2>{{ item.cost }}</h2>
+          <div
+            class="menu-item"
+            *ngFor="let product of products"
+            (click)="selectProduct(product)"
+          >
+            <img [src]="product.urlImage" [alt]="product.nameProduct" />
+            <div class="info">
+              <h3>{{ product.nameProduct }}</h3>
+              <p class="price">{{ product.price | number: '1.0-0' }} đ</p>
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
     <button class="nav next" (click)="nextMenu()">›</button>
   </div>

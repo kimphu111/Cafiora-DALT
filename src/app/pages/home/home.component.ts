@@ -1,15 +1,33 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router } from '@angular/router';
 import {FooterComponent} from '../footer/footer.component';
+import { HttpClient } from '@angular/common/http';
+
+
+
+interface Product{
+  _id: string;
+  nameProduct: string;
+  price: number;
+  status: boolean;
+  urlImage: string;
+}
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-home',
+  standalone: true,
   imports: [CommonModule, FooterComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
+
 export class HomeComponent implements OnInit, OnDestroy {
+
+  constructor(private http: HttpClient,
+              private router: Router)
+  {}
+
   images: string[] = [
     'assets/Carousel1.png',
     'assets/Carousel2.png',
@@ -17,31 +35,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     'assets/Carousel4.png',
   ];
 
-  menuItems = [
-    { img: 'assets/AboutUs1.png', name: 'Black Coffee', description: 'Prepared by forcing hot water under high pressure through finely ground coffee.\n', cost: "20.000đ" },
-    { img: 'assets/AboutUs1.png', name: 'Black Coffee', description: 'Prepared by forcing hot water under high pressure through finely ground coffee.\n', cost: "20.000đ" },
-    { img: 'assets/AboutUs1.png', name: 'Black Coffee', description: 'Prepared by forcing hot water under high pressure through finely ground coffee.\n', cost: "20.000đ" },
-    { img: 'assets/AboutUs1.png', name: 'Black Coffee', description: 'Prepared by forcing hot water under high pressure through finely ground coffee.\n', cost: "20.000đ" },
-    { img: 'assets/AboutUs1.png', name: 'Black Coffee', description: 'Prepared by forcing hot water under high pressure through finely ground coffee.\n', cost: "20.000đ" },
-    { img: 'assets/AboutUs1.png', name: 'Black Coffee', description: 'Prepared by forcing hot water under high pressure through finely ground coffee.\n', cost: "20.000đ" },
-
-
-    // thêm các món khác
-  ];
-
   currentIndex = 0;
   intervalMs = 2000;
   private timerId: any = null;
-
+  loading:boolean = false;
   currentMenuIndex = 0;
   itemsPerPage = 3;
+
+  //menu
+  products: Product[] = [];
+  error = '';
 
   get trackTransform(): string {
     return `translateX(-${this.currentIndex * 100}%)`;
   }
-
   ngOnInit(): void {
     this.play();
+    this.getProduct()
   }
 
   ngOnDestroy(): void {
@@ -82,15 +92,43 @@ export class HomeComponent implements OnInit, OnDestroy {
     return `translateX(-${(this.currentMenuIndex * 100) / this.itemsPerPage}%)`;
   }
 
+
+  getProduct(){
+    this.loading = true;
+    this.http.get<any>('http://localhost:8000/api/getProduct').subscribe({
+      next:(res) =>{
+        this.products = res.dataProduct || [];
+        this.loading = false;
+      },
+      error:(err)=>{
+        console.log('Lỗi khi lấy dữ liệu:', err);
+        this.error = 'Không thể tải danh sách sản phẩm.';
+        this.loading = false;
+      }
+    })
+  }
+
+
   nextMenu() {
-    if (this.currentMenuIndex < this.menuItems.length - this.itemsPerPage) {
+    const maxIndex = Math.ceil(this.products.length / this.itemsPerPage) ;
+    if (this.currentMenuIndex < maxIndex) {
       this.currentMenuIndex++;
+    } else {
+      this.currentMenuIndex = 0;
     }
   }
 
   prevMenu() {
+    const maxIndex = Math.ceil(this.products.length / this.itemsPerPage) ;
     if (this.currentMenuIndex > 0) {
       this.currentMenuIndex--;
+    } else {
+      this.currentMenuIndex = maxIndex;
     }
   }
+
+  selectProduct(product: Product){
+    this.router.navigate(['/menu']);
+  }
+
 }
