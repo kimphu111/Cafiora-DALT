@@ -1,31 +1,34 @@
-const bcrypt = require('bcrypt');
-const asyncHandler = require('express-async-handler');
-const jwt = require('jsonwebtoken');
-const { pushTokenToBlackList } = require('../databases/redis/redisJwt');
-const RefreshModel = require('../models/refreshModel');
-const { DateTime } = require('luxon');
-const User = require('../models/userModel');
+const bcrypt = require("bcrypt");
+const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
+const { pushTokenToBlackList } = require("../databases/redis/redisJwt");
+const RefreshModel = require("../models/refreshModel");
+const { DateTime } = require("luxon");
+const User = require("../models/userModel");
 
 //@desc Login User
 //@route POST /api/users/login
 //@access private
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const ipAddress = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  const ipAddress =
+    req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   const userAgent = req.useragent;
 
-  const time = String(DateTime.now().setZone('Asia/Ho_Chi_Minh').toFormat('yyyy-MM-dd HH:mm:ss'));
+  const time = String(
+    DateTime.now().setZone("Asia/Ho_Chi_Minh").toFormat("yyyy-MM-dd HH:mm:ss")
+  );
 
   if (!email || !password) {
     res.status(400);
-    throw new Error('All fields are mandatory!');
+    throw new Error("All fields are mandatory!");
   }
 
   const user = await User.findOne({ email });
 
   if (!user) {
     res.status(404);
-    throw new Error('User not found!');
+    throw new Error("User not found!");
   }
   //compare password with hashedpassword
   if (user && (await bcrypt.compare(password, user.password))) {
@@ -40,11 +43,11 @@ const login = asyncHandler(async (req, res) => {
       },
       process.env.JWT_SECRET_KEY,
       {
-        expiresIn: '15m',
+        expiresIn: "5h",
       }
     );
 
-    console.log(accessToken, 'accessToken');
+    console.log(accessToken, "accessToken");
 
     // generate refresh token
 
@@ -58,10 +61,10 @@ const login = asyncHandler(async (req, res) => {
       },
       process.env.REFRESH_SECRET_KEY,
       {
-        expiresIn: '30d',
+        expiresIn: "30d",
       }
     );
-    console.log('refreshToken');
+    console.log("refreshToken");
 
     RefreshModel.create({
       email: user.email,
@@ -75,11 +78,11 @@ const login = asyncHandler(async (req, res) => {
     });
 
     // 30 * 24 * 60 * 60 * 1000 = 30 days
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: true,
-      sameSite: 'None',
+      sameSite: "None",
       // path: "/"
     });
     res.status(200).json({
@@ -90,11 +93,11 @@ const login = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(401);
-    throw new Error('email or password is not valid');
+    throw new Error("email or password is not valid");
   }
 
   //compare password with hashedpassword
-  res.status(201).json({ message: 'login successful' });
+  res.status(201).json({ message: "login successful" });
 });
 
 //@desc Current User
@@ -118,7 +121,7 @@ const logout = asyncHandler(async (req, res) => {
   try {
     if (!cookie) {
       return res.status(400).json({
-        message: 'Không có refreshToken trong cookie!',
+        message: "Không có refreshToken trong cookie!",
       });
     }
     // push refresh token to blacklist redis
@@ -130,27 +133,27 @@ const logout = asyncHandler(async (req, res) => {
       console.log(error);
     }
     // clear cookie from client
-    res.clearCookie('refreshToken', {
+    res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true, //     true khi có https
-      sameSite: 'none', // none khi có https
-      path: '/',
+      sameSite: "none", // none khi có https
+      path: "/",
     });
     console.log(req.cookies.refreshToken);
 
     if (req.cookies.refreshToken) {
       res.status(200).json({
-        message: 'logout successfull',
+        message: "logout successfull",
         success: true,
       });
     } else {
       res.status(400).json({
-        message: 'refreshToken Van Ton Tai',
+        message: "refreshToken Van Ton Tai",
       });
     }
   } catch {
-    console.error('Server error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Server error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 
   res.status(200).json({ message: `${email} Log out successful` });
@@ -171,15 +174,15 @@ const refresh = asyncHandler(async (req, res) => {
         },
       },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: '15m' }
+      { expiresIn: "15m" }
     );
 
     res.status(200).json({
       accessToken,
     });
   } catch (err) {
-    console.error('Error generating access token:', err);
-    res.status(500).json({ message: 'Error generating access token' });
+    console.error("Error generating access token:", err);
+    res.status(500).json({ message: "Error generating access token" });
   }
 });
 
