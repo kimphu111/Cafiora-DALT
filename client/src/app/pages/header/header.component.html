@@ -1,0 +1,26 @@
+<header>
+  <nav class="navbar">
+    <div class="nav-brand" routerLink="/home">
+      <img src="assets/logo.png" alt="Cafeloria Logo" class="logo-image" />
+    </div>
+
+
+    <div class="nav-link">
+      <ul class="nav-links">
+        <li><a [routerLink]="['/home']" routerLinkActive="active-link">Home</a></li>
+        <li><a [routerLink]="['/menu']" routerLinkActive="active-link">Menu</a></li>
+        <li><a [routerLink]="['/about']" routerLinkActive="active-link">About</a></li>
+        <span class="underline"></span>
+      </ul>
+    </div>
+
+    <div class="login" routerLink="/login">
+      <a class="btn-login">Login</a>
+    </div>
+
+  </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
