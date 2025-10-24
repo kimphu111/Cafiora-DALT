@@ -1,0 +1,39 @@
+<div class="auth-container">
+  <div class="auth-content">
+
+    <!-- Left Nav -->
+    <div class="left-nav">
+      <a href="/home" class="back-btn">
+        <span class="material-icons">arrow_back</span>
+      </a>
+
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+
+    <!-- Center Image -->
+    <div class="center-img">
+      <img src="assets/login.jpg" alt="Pattern Logo" />
+    </div>
+
+    <!-- Right Form -->
+    <div class="auth-right">
+      <div class="form-box">
+        <h2>LOGIN</h2>
+        <form (ngSubmit)="onSubmit()">
+          <input type="email" placeholder="Email" [(ngModel)]="email" name="email" />
+          <input type="password" placeholder="Password" [(ngModel)]="password" name="password" />
+          <button type="submit">LOGIN</button>
+        </form>
+        <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+        <p class="switch-text">
+          Don’t have an account? <a href="/register">Sign Up Now</a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
