@@ -20,11 +20,25 @@ const OrderDetail = require("../models/ortherDetailModel");
 }*/
 const createOrder = asyncHandler(async (req, res) => {
   try {
-    const { table_number, items, note } = req.body;
+    const { table_number, items, note, customer_name } = req.body;
+
+    if (!table_number || !items || !customer_name) {
+      return res.status(400).json({
+        message: "Vui lòng nhập đầy đủ table_number, items và customer_name",
+      });
+    }
+
+    // Nếu items không phải mảng hoặc rỗng
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
+        message: "Items phải là một mảng và không được để trống",
+      });
+    }
 
     const order = await Order.create({
       table_number,
       employee_id: req.user._id,
+      customer_name,
       note,
       status: false,
     });

@@ -8,6 +8,7 @@ const {
 const {
   getAllOrdersBarista,
   updateOrderStatus,
+  getOrderDetailById,
 } = require("../../controllers/baristaController");
 
 // lấy tất cả other
@@ -16,6 +17,13 @@ router.get(
   validateAccessToken,
   auth(["barista"]),
   getAllOrdersBarista
+);
+
+router.get(
+  "/barista/getOrderDetail/:id",
+  validateAccessToken,
+  auth(["barista"]),
+  getOrderDetailById
 );
 
 //sửa other

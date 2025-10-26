@@ -12,6 +12,7 @@ const orderSchema = new mongoose.Schema(
       ref: "users", // vì model User export là "users"
       required: true,
     },
+    customer_name: { type: String, required: true },
     status: {
       type: Boolean, // true = đã xử lý, false = đang chờ
       default: false,
