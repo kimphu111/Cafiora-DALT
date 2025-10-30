@@ -9,6 +9,9 @@ import { RegisterComponent } from './pages/auth/register/register.component';
 import { BaristaComponent } from './pages/staff/barista/barista.component';
 import { CashierComponent } from './pages/staff/cashier/cashier.component';
 import { WaiterComponent } from './pages/staff/waiter/waiter.component';
+import { CreateAccountComponent } from './pages/staff/cashier/create-account/create-account.component';
+import { ViewRevenueComponent } from './pages/staff/cashier/view-revenue/view-revenue.component';
+import { PrintInvoiceComponent } from './pages/staff/cashier/print-invoice/print-invoice.component';
 export const routes: Routes = [
   {
     path: '',
@@ -24,8 +27,21 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path :'waiter', component: WaiterComponent},
-  { path :'barista', component: BaristaComponent},
-  { path: 'cashier', component: CashierComponent },
+
+  { path :'barista/:status',
+    loadComponent: () => import('./pages/staff/barista/barista.component').then(m => m.BaristaComponent),
+  },
+  { path: 'barista', redirectTo: 'barista/new', pathMatch: 'full' },
+
+  { path: 'cashier',
+    loadComponent: () => import('./pages/staff/cashier/cashier.component').then(m => m.CashierComponent),
+    children: [
+      { path: '', redirectTo: 'view-revenue', pathMatch: 'full'},
+      { path: 'create-account', component: CreateAccountComponent },
+      { path: 'view-revenue', component: ViewRevenueComponent },
+      { path: 'print-invoice', component: PrintInvoiceComponent }
+    ]
+   },
   { path: '**', redirectTo: 'home' },
 ];
 
