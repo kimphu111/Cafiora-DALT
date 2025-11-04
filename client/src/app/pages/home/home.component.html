@@ -1,0 +1,77 @@
+<div class="carousel" (mouseenter)="pause()" (mouseleave)="play()">
+  <div class="track" [style.transform]="trackTransform">
+    <div class="slide" *ngFor="let img of images; let i = index">
+      <img [src]="img" [alt]="'Carousel ' + (i + 1)" />
+      <div class="caption">Carousel {{ i + 1 }}</div>
+    </div>
+  </div>
+
+  <div class="dots">
+    <button
+      *ngFor="let _ of images; let i = index"
+      [class.active]="i === currentIndex"
+      (click)="goTo(i)"
+    ></button>
+  </div>
+</div>
+
+<!--slide2-->
+<div class="about-us">
+  <div class="about-us-image">
+    <img src="assets/AboutUs1.png" alt="About Us" />
+  </div>
+  <div class="about-us-content">
+    <h2>About Us</h2>
+    <p>
+      Cafiora not only brings coffee – but also gives you alertness, vitality and lasting youthfulness. Selected from the finest coffee beans and roasted to standard, each cup contains pure energy from nature.
+    </p>
+    <p>
+      Cafiora space is designed as a peaceful corner in the middle of modern life – where you find balance, inspiration and enjoy a healthy lifestyle.
+    </p>
+    <p>
+      Cafiora – Alert. Youthful. Lasting.
+    </p>
+    <div class="about-us-pictures">
+      <img src="assets/AboutUs2.png" alt="Signature" class="signature" />
+      <img src="assets/AboutUs3.png" alt="Signature" class="signature" /></div>
+  </div>
+</div>
+
+<!-- slide3-menu -->
+<div class="menu">
+  <div class="menu-content">
+    <h2>Our Menu</h2>
+  </div>
+
+  <div class="menu-carousel">
+    <button class="nav prev" (click)="prevMenu()">‹</button>
+
+    <div class="menu-container">
+      <div class="menu-track-wrapper">
+        <div class="menu-track" [style.transform]="menuTransform">
+          <div
+            class="menu-item"
+            *ngFor="let product of products"
+            (click)="selectProduct(product)"
+          >
+            <img [src]="product.urlImage" [alt]="product.nameProduct" />
+            <div class="info">
+              <h3 class="name-product">{{ product.nameProduct }}</h3>
+              <p class="price">{{ product.price | number: '1.0-0' }} đ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <button class="nav next" (click)="nextMenu()">›</button>
+  </div>
+</div>
+
+
+
+<app-footer>
+
+</app-footer>
+
