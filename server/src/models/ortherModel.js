@@ -17,6 +17,10 @@ const orderSchema = new mongoose.Schema(
       type: Boolean, // true = đã xử lý, false = đang chờ
       default: false,
     },
+    isPayment: {
+      type: Boolean,
+      default: false,
+    },
     note: {
       type: String,
     },

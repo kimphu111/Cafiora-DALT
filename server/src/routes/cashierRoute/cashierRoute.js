@@ -4,6 +4,8 @@ const {
   cashierRegister,
   getAllUser,
   deleteUser,
+  getAllOrdersCashier,
+  updatePaymentStatus,
 } = require("../../controllers/cashierController");
 
 const router = express.Router();
@@ -18,6 +20,16 @@ const {
 } = require("../../controllers/productController");
 
 //----------- Route cashier product -------------------//
+
+// route cashier lay tat san pham
+router
+  .route("/cashier/getAllOrders")
+  .get(validateAccessToken, auth(["cashier"]), getAllOrdersCashier);
+
+// route cashier lay tat san pham
+router
+  .route("/cashier/payment/:id")
+  .put(validateAccessToken, auth(["cashier"]), updatePaymentStatus);
 
 // route cashier dang san pham
 router
