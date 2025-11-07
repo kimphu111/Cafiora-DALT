@@ -27,6 +27,7 @@ export class WaiterComponent implements OnInit {
   tableStatus: { [key: number]: boolean } = {};
   selectedTable: number | null = null;
   note = '';
+  customerName = '';
 
 
   constructor(private http: HttpClient) {}
@@ -108,6 +109,7 @@ export class WaiterComponent implements OnInit {
     const payload = {
       table_number: this.selectedTable,
       note: this.note,
+      customer_name: this.customerName,
       items: this.cart.map(i => ({
         product_id: i.product._id,
         quantity: i.quantity,
@@ -115,8 +117,9 @@ export class WaiterComponent implements OnInit {
       }))
     };
 
+
     this.http.post('http://localhost:8000/api/waiter/createOrder', payload, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}`}
     }).subscribe({
       next: (res: any) => {
         alert(res.message || 'Đặt đơn thành công!');

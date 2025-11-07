@@ -166,6 +166,23 @@
   }
 }
 
+.customer-name-section {
+  margin-top: 15px;
+
+  input {
+    width: 90%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+
+    &:focus {
+      border-color: #7b3fe4;
+    }
+  }
+}
+
+
   .cart-summary {
   margin-top: 1.5rem;
   display: flex;

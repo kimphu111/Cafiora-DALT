@@ -1,11 +1,3 @@
-<div *ngIf="loading" class="loading-state">
-  <p>Đang tải thực đơn...</p>
-</div>
-
-<div *ngIf="error" class="error-state">
-  <p>{{ error }}</p>
-</div>
-
 <div *ngIf="!loading && !error" class="container">
 
   <!-- PANEL TRÁI: DANH SÁCH MÓN -->
@@ -16,9 +8,7 @@
         <img [src]="p.urlImage" [alt]="p.nameProduct" (error)="onImgError($event)">
         <h3>{{ p.nameProduct }}</h3>
         <p class="price">{{ p.price | number:'1.0-0' }} ₫</p>
-        <span [class.active]="p.status" [class.inactive]="!p.status">
-          {{ p.status ? 'Còn bán' : 'Hết hàng' }}
-        </span>
+        <span [class.active]="p.status" [class.inactive]="!p.status"></span>
       </div>
     </div>
   </div>
@@ -43,6 +33,7 @@
         </div>
       </div>
 
+      <!-- CHỌN BÀN -->
       <div class="table-selection">
         <h3>Chọn bàn</h3>
         <div class="table-grid">
@@ -55,11 +46,20 @@
             Bàn {{ t }}
           </div>
         </div>
-
-
       </div>
 
+      <!-- THÊM PHẦN NHẬP TÊN KHÁCH HÀNG -->
+      <div class="customer-name-section">
+        <h3>Tên khách hàng</h3>
+        <input
+          type="text"
+          [(ngModel)]="customerName"
+          placeholder="Nhập tên khách hàng"
+          required
+        />
+      </div>
 
+      <!-- TỔNG KẾT -->
       <div class="cart-summary">
         <div class="summary-row">
           <p><strong>Tổng số món:</strong> {{ totalItems }}</p>
@@ -67,18 +67,16 @@
         </div>
 
         <div class="bottom-row">
-    <textarea
-      id="note"
-      [(ngModel)]="note"
-      placeholder="Ghi chú (VD: Không đá, ít đường...)"
-      rows="2"
-    ></textarea>
+          <textarea
+            id="note"
+            [(ngModel)]="note"
+            placeholder="Ghi chú (VD: Không đá, ít đường...)"
+            rows="2"
+          ></textarea>
 
           <button class="submit-btn" (click)="submitOrder()">Xác nhận đặt</button>
         </div>
       </div>
-
-
     </div>
 
     <ng-template #emptyCart>

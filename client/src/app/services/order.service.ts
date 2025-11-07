@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { catchError, forkJoin, map, Observable, of, switchMap } from "rxjs";
 import { OrderDetailModel, OrderModel } from "../model/order.model";
@@ -6,19 +6,30 @@ import { OrderDetailModel, OrderModel } from "../model/order.model";
 @Injectable({
   providedIn: 'root'
 })
-
 export class OrderService {
   private baseUrl = 'http://localhost:8000/api/barista';
   private http = inject(HttpClient);
 
+  private createAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token') || '';
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
   getAllOrders(): Observable<any[]> {
-    return this.http.get<{data: any}>(`${this.baseUrl}/getAllOrders`)
-    .pipe(
+    const headers = this.createAuthHeaders();
+
+    return this.http.get<{ data: any }>(`${this.baseUrl}/getAllOrders`, {
+      headers,
+      withCredentials: true
+    }).pipe(
       map(res => res.data.map((order: any): OrderModel => ({
         orderId: order.order_id,
         tableNumber: order.table_number,
         customerName: order.customer_name || 'Customer Name',
-         employee: {
+        employee: {
           employeeId: order.employee._id,
           username: order.employee.username,
           email: order.employee.email,
@@ -27,14 +38,17 @@ export class OrderService {
         note: order.note || 'No',
         orderDetailId: order.orderDetail_id,
         createdAt: order.createdAt,
-        // updatedAt: order.updatedAt
       })))
     );
   }
 
   getOrderDetail(orderDetailId: string): Observable<OrderDetailModel[]> {
-    return this.http.get<{data: any}>(`${this.baseUrl}/getOrderDetail/${orderDetailId}`)
-    .pipe(
+    const headers = this.createAuthHeaders();
+
+    return this.http.get<{ data: any }>(`${this.baseUrl}/getOrderDetail/${orderDetailId}`, {
+      headers,
+      withCredentials: true
+    }).pipe(
       map(res => {
         if (res.data) {
           const orderDetail = res.data;
@@ -47,10 +61,11 @@ export class OrderService {
               subtotal: item.subtotal,
               unitPrice: item.unit_price,
               someoneId: item._id,
+              header: []
             })),
-          createdAt: orderDetail.createdAt,
-          updatedAt: orderDetail.updatedAt,
-          }]
+            createdAt: orderDetail.createdAt,
+            updatedAt: orderDetail.updatedAt,
+          }];
         } else {
           console.error('No order details found.');
           return [];
@@ -58,7 +73,7 @@ export class OrderService {
       }),
       catchError(error => {
         console.error('Error fetching order detail:', error);
-      return of([]);
+        return of([]);
       })
     );
   }

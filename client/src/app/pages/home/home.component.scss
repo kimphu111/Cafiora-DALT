@@ -221,7 +221,6 @@
       border-radius: 15px;
       display: flex;
       flex-direction: column;
-      align-items: center;
       transition: transform 0.3s ease;
       position: relative;
       z-index: 1;
@@ -259,17 +258,44 @@
         p {
           font-family: 'KyivType Sans', cursive;
           color: rgba(55, 55, 55, 0.6);
-          font-size: 14px;
+          font-size: 30px;
+
         }
 
         h3 {
-          font-size: 32px;
+          //font-size: 302px;
           color: #333;
+          font-family: Lalezar, serif;
         }
 
         h2 {
           font-size: 26px;
           font-weight: bold;
+        }
+      }
+
+      .info {
+        flex: 1;
+        text-align: center; // tuỳ bố cục của bạn
+        margin-top: 5px;
+
+        .name-product {
+          margin: 0;
+          font-size: 25px;
+          font-weight: 600;
+          color: #333;
+          font-family: Lalezar, sans-serif;
+          display: flex;
+          justify-content: flex-start;
+        }
+
+        .price {
+          font-size: 20px;
+          color: #000000;
+          font-family:  Lalezar, sans-serif;
+          display: flex;
+          justify-content: flex-start;
+          margin:0;
         }
       }
     }
