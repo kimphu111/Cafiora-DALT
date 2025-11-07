@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, forkJoin, map, Observable, of } from "rxjs";
+import { catchError, forkJoin, map, Observable, of, switchMap } from "rxjs";
 import { OrderDetailModel, OrderModel } from "../model/order.model";
 
 @Injectable({
@@ -64,25 +64,28 @@ export class OrderService {
   }
 
   getAllOrdersWithDetails(): Observable<OrderModel[]> {
-    return new Observable<OrderModel[]>((observer) => {
-      this.getAllOrders().subscribe({
-        next: orders => {
-          const orderDetailsRequests = orders.map(order => this.getOrderDetail(order.orderDetailId));
+    return this.getAllOrders().pipe(
+      switchMap(orders => {
+        if (!orders.length) {
+          return of([]);
+        }
 
-          forkJoin(orderDetailsRequests).subscribe({
-            next: details => {
-              orders.forEach((order, index) => {
-                order.orderDetails = details[index];
-              });
-              observer.next(orders);
-            },
-            error: (err) => observer.error(err),
-          });
-        },
-        error: (err) => observer.error(err),
+        // Tạo mảng Observable của các request chi tiết đơn hàng
+        const orderDetailsRequests = orders.map(order =>
+          this.getOrderDetail(order.orderDetailId)
+        );
+
+        // Chạy tất cả request song song và gán kết quả vào orders
+        return forkJoin(orderDetailsRequests).pipe(
+          map(details => 
+            orders.map((order, index) => ({
+              ...order,
+              orderDetails: details[index]
+            }))
+          )
+        );
       })
-    })
+    );
   }
-
   
 }
