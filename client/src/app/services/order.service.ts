@@ -11,7 +11,7 @@ export class OrderService {
   private http = inject(HttpClient);
 
   private createAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token') || '';
+    const token = localStorage.getItem('accessToken') || '';
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`

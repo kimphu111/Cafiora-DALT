@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   register(data: any): Observable<any> {
-    const token = localStorage.getItem('accessToken') || ''; // lấy accessToken
+    const token = localStorage.getItem('accessToken') || '';
 
     return this.http.post(`${this.apiUrlCashier}/cashierRegister`, data, {
       headers: {
