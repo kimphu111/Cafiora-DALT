@@ -41,6 +41,7 @@ const createOrder = asyncHandler(async (req, res) => {
       customer_name,
       note,
       status: false,
+      isPayment: false,
     });
 
     const itemsWithSubtotal = items.map((item) => ({
@@ -156,7 +157,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 });
 
 //@desc adminAuth
-//@route delete /api/waiter/deleteProduct/:id
+//@route delete /api/waiter/deleteOrder/:id
 //@access private
 const deleteOrder = asyncHandler(async (req, res) => {
   try {
@@ -165,6 +166,11 @@ const deleteOrder = asyncHandler(async (req, res) => {
     const order = await Order.findById(id);
     if (!order)
       return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    if (order.isPayment) {
+      return res
+        .status(400)
+        .json({ message: "Đơn hàng đã thanh toán, không thể xoá" });
+    }
 
     // Xoá chi tiết trước
     await OrderDetail.deleteMany({ order_id: id });

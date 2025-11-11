@@ -1,7 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt"); // hoặc bcrypt
-
+const Order = require("../models/ortherModel");
+const OrderDetail = require("../models/ortherDetailModel");
 //@desc Register User
 //@route POST /api/cashier/register
 //@access public
@@ -80,7 +81,7 @@ const getAllUser = asyncHandler(async (req, res) => {
 });
 
 //@desc deleteUser
-//@route DELETE /api/deleteUser
+//@route DELETE /api/updateProduct/:id
 //@access private
 const deleteUser = asyncHandler(async (req, res) => {
   try {
@@ -103,8 +104,81 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Lấy tất cả đơn hàng + chi tiết món để thu ngân xem
+// @route GET /api/cashier/getAllOrders
+// @access Private
+
+const getAllOrdersCashier = asyncHandler(async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("employee_id", "username email")
+      .sort({ createdAt: -1 });
+
+    // Lấy thêm chi tiết từng đơn
+    const fullOrders = await Promise.all(
+      orders.map(async (order) => {
+        const orderDetail = await OrderDetail.findOne({ order_id: order._id });
+        return { order, orderDetail };
+      })
+    );
+
+    res.status(200).json({
+      message: "Lấy dữ liệu đơn hàng thành công",
+      data: fullOrders,
+    });
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách đơn hàng:", error);
+    res.status(500).json({
+      message: "Lỗi khi lấy danh sách đơn hàng",
+      error: error.message,
+    });
+  }
+});
+
+// @desc Cập nhật trạng thái thanh toán (isPayment)
+// @route PUT /api/cashier/payment/:id
+// @access Private
+
+const updatePaymentStatus = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isPayment } = req.body;
+
+    // Kiểm tra hợp lệ
+    if (typeof isPayment !== "boolean") {
+      return res.status(400).json({
+        message: "Trường isPayment phải là kiểu boolean (true/false)",
+      });
+    }
+
+    // Tìm đơn hàng
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+
+    // Cập nhật trạng thái thanh toán
+    order.isPayment = isPayment;
+    await order.save();
+
+    res.status(200).json({
+      message: `Đã cập nhật trạng thái thanh toán thành ${
+        isPayment ? "đã thanh toán" : "chưa thanh toán"
+      }`,
+      order,
+    });
+  } catch (error) {
+    console.error("Lỗi khi cập nhật thanh toán:", error);
+    res
+      .status(500)
+      .json({ message: "Lỗi khi cập nhật thanh toán", error: error.message });
+  }
+});
+
 module.exports = {
   cashierRegister,
   getAllUser,
   deleteUser,
+  getAllOrdersCashier,
+  updatePaymentStatus,
 };

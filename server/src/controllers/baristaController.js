@@ -20,6 +20,7 @@ const getAllOrdersBarista = asyncHandler(async (req, res) => {
           customer_name: order.customer_name,
           employee: order.employee_id,
           status: order.status,
+          isPayment: order.isPayment,
           note: order.note,
           createdAt: order.createdAt,
           orderDetail_id: orderDetail ? orderDetail._id : null, // ID để lấy chi tiết
