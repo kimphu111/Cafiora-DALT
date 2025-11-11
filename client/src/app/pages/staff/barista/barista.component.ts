@@ -15,6 +15,7 @@ import { OrderService } from '../../../services/order.service';
 export class BaristaComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private http = inject(HttpClient);
 
   private orderService = inject(OrderService);
 
@@ -45,6 +46,11 @@ export class BaristaComponent implements OnInit {
   ngOnInit(): void {
     this.getOrderDetailId();
     this.loadOrdersWithDetails();
+    this.getDetail('69058f5d0d8233402768ab4f');
+  }
+
+  getDetail(id: string) {
+    this.http.get(`http://localhost:8000/api/barista/getOrderDetail/${id}`).subscribe({next: res => console.log(res)})
   }
 
   toggleMode() {
@@ -92,7 +98,7 @@ export class BaristaComponent implements OnInit {
     const prod = item?.productId ?? item?.product_id;
     // debug khi cấu trúc không như mong đợi
     if (!prod) {
-      console.warn('resolveItemProduct: missing product for item', item);
+      // console.warn('resolveItemProduct: missing product for item', item);
       return { id: '', name: '' };
     }
     if (typeof prod === 'string') {

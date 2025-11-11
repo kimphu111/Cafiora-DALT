@@ -7,13 +7,13 @@
     <div class="toggle-button" [class.right]="status() === 'completed'"></div>
 
     <div class="toggle-label new" [class.active]="status() === 'new'">
-      <a routerLink="/barista/new" routerLinkActive="active" >
+      <a routerLink="/barista/new" routerLinkActive="active" (click)="$event.stopPropagation()">
         New
       </a>
     </div>
 
     <div class="toggle-label completed" [class.active]="status() === 'completed'">
-      <a routerLink="/barista/completed" routerLinkActive="active" >
+      <a routerLink="/barista/completed" routerLinkActive="active" (click)="$event.stopPropagation()">
         Completed
       </a>
     </div>
@@ -21,66 +21,68 @@
   </div>
 </nav>
 
-@if (status() === 'new') {
-  <h2>New Order</h2>
-}
+<main>
+  @if (status() === 'new') {
+    <h2>New Order</h2>
+  }
 
-@if (status() === 'completed') {
-  <h2>Completed Order</h2>
-}
+  @if (status() === 'completed') {
+    <h2>Completed Order</h2>
+  }
 
 
-<div class="container">
-  <table class="order-table"> 
-    <col style="width: 9%;"> <!--Order ID-->
-    <col style="width: 10%;"> <!--Time Created-->
-    <col style="width: 11%;"> <!--Drinks-->
-    <col style="width: 6%;"> <!--Quantity-->
-    <col style="width: 5%;"> <!--Table Number-->
-    <col style="width: 7%;"> <!--Status-->
-    <col style="width: 12%;"> <!--Customer Name-->
-    <col style="width: 17%;"> <!--Note-->
-    <col style="width: 4%;"> <!--Done Button-->
+  <div class="container">
+    <table class="order-table"> 
+      <col style="width: 9%;"> <!--Order ID-->
+      <col style="width: 10%;"> <!--Time Created-->
+      <col style="width: 11%;"> <!--Drinks-->
+      <col style="width: 6%;"> <!--Quantity-->
+      <col style="width: 5%;"> <!--Table Number-->
+      <col style="width: 7%;"> <!--Status-->
+      <col style="width: 12%;"> <!--Customer Name-->
+      <col style="width: 17%;"> <!--Note-->
+      <col style="width: 4%;"> <!--Done Button-->
 
-    <thead>
+      <thead>
 
-      <tr>
-        <th>Order ID</th>
-        <th>Time Created</th>
-        <th>Drinks</th>
-        <th>Quantity</th>
-        <th>Table</th>
-        <th>Status</th>
-        <th>Customer Name</th>
-        <th>Note</th>
-        <th>Done</th>
-      </tr>
-
-    </thead>
-    <tbody>
-
-      @for (row of filteredTableRows; track $index) {
         <tr>
-          <td>{{row.orderId}}</td>
-          <td>{{row.createdAt | date: "dd/MM/yyyy '-' hh:mm a"}}</td>
-          <td>{{row.productName}}</td>
-          <td>{{row.quantity}}</td>
-          <td>{{row.tableNumber}}</td>
-          <td>{{row.status}}</td>
-          <td>{{row.customerName}}</td>
-          <td>{{row.note}}</td>
-          @if (status() === 'new') {
-            <td>
-              <button (click)="markDone(row)">Done</button>
-            </td>
-          } @else {
-            <td>
-              Done
-            </td>
-          }
+          <th>Order ID</th>
+          <th>Time Created</th>
+          <th>Drinks</th>
+          <th>Quantity</th>
+          <th>Table</th>
+          <th>Status</th>
+          <th>Customer Name</th>
+          <th>Note</th>
+          <th>Done</th>
         </tr>
-      }
 
-    </tbody>
-  </table>
-</div>
+      </thead>
+      <tbody>
+
+        @for (row of filteredTableRows; track $index) {
+          <tr>
+            <td>{{row.orderId}}</td>
+            <td>{{row.createdAt | date: "dd/MM/yyyy '-' hh:mm a"}}</td>
+            <td>{{row.productName}}</td>
+            <td>{{row.quantity}}</td>
+            <td>{{row.tableNumber}}</td>
+            <td>{{row.status}}</td>
+            <td>{{row.customerName}}</td>
+            <td>{{row.note}}</td>
+            @if (status() === 'new') {
+              <td>
+                <button (click)="markDone(row)">Done</button>
+              </td>
+            } @else {
+              <td>
+                Done
+              </td>
+            }
+          </tr>
+        }
+
+      </tbody>
+    </table>
+  </div>
+</main>
