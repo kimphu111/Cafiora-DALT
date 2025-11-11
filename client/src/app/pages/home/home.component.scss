@@ -1,0 +1,586 @@
+:host {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction:  column;
+}
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 90vw;
+  height: 77vh;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  margin-bottom: 30px;
+}
+
+/* the sliding track */
+.track {
+  display: flex;
+  height: 100%;
+  transition: transform 1s ease; // 'chạy từ từ' -> transition 1s
+}
+
+/* each slide */
+.slide {
+  flex: 0 0 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05); // hover nhẹ
+  }
+}
+
+/* dots */
+.dots {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  opacity: 0.5;
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+}
+
+.dots button.active {
+  transform: scale(1.4);
+  opacity: 1;
+}
+
+/* nav arrows */
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 6;
+}
+.nav.prev {
+  left: 10px;
+}
+.nav.next {
+  right: 10px;
+}
+
+// slide2 aubout us
+.about-us {
+  width: 80vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 50px;
+
+
+  .about-us-image {
+    img {
+      width: 450px;
+      height: 580px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 4px solid #6f4e37;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05); // hover nhẹ
+      }
+    }
+  }
+
+  .about-us-content {
+    width: calc(100% - 300px);
+    font-size: 20px;
+    line-height: 1.3;
+    color: #555;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    h2 {
+      font-size: 48px;
+      font-weight: 600;
+      color: #333;
+      font-family: 'Lalezar', cursive;
+      margin: 0 0 0 0;
+    }
+
+     p {
+      font-size: 20px;
+      font-family: 'KyivType Sans', cursive;
+       margin-bottom: 0;
+
+      &:nth-child(1) { color: rgba(0,0,0,0.3); }
+      &:nth-child(2) { color: rgba(0,0,0,0.3); }
+      &:nth-child(3) { color: rgba(0,0,0,0.3); }
+      &:nth-child(4) { color: rgba(0,0,0,0.3); }
+    }
+
+
+    .about-us-pictures {
+      display: flex;
+      gap: 40px;
+      margin-top: 20px;
+
+      .signature {
+        width: 18.5vw;
+        height: 35vh;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.05); // hover nhẹ
+        }
+      }
+    }
+  }
+}
+
+
+.menu {
+  width: 1050px;
+  height: 100vh;
+  margin: 50px 0 100px 0;
+
+  .menu-content {
+    h2 {
+      font-family: 'Lalezar', cursive;
+      font-size: 50px;
+      margin-bottom: 0;
+    }
+  }
+
+  .menu-carousel {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+
+    .menu-container {
+      width: 1000px;
+      margin: 0 auto;
+      overflow: hidden;
+      position: relative;
+
+    }
+
+    .menu-track-wrapper {
+      overflow: visible;
+      width: 100%;
+      height: 100%;
+      padding: 20px 0;
+      margin-left: 10px;
+    }
+
+    .menu-track {
+      display: flex;
+      transition: transform 0.5s ease;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .menu-item {
+      flex: 0 0 calc(94% / 3);
+      max-width: calc(100% / 3);
+      box-sizing: border-box;
+      padding: 10px;
+      text-align: left;
+      border: 1.5px solid #C7C7C7;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+      position: relative;
+      z-index: 1;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      img {
+        width: 100%;
+        max-width: 280px;
+        height: 300px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+
+      .detail-drink {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 10px;
+
+        h3,
+        h2,
+        p {
+          margin: 0 0 10px 10px;
+        }
+
+        p {
+          font-family: 'KyivType Sans', cursive;
+          color: rgba(55, 55, 55, 0.6);
+          font-size: 30px;
+
+        }
+
+        h3 {
+          //font-size: 302px;
+          color: #333;
+          font-family: Lalezar, serif;
+        }
+
+        h2 {
+          font-size: 26px;
+          font-weight: bold;
+        }
+      }
+
+      .info {
+        flex: 1;
+        text-align: center; // tuỳ bố cục của bạn
+        margin-top: 5px;
+
+        .name-product {
+          margin: 0;
+          font-size: 25px;
+          font-weight: 600;
+          color: #333;
+          font-family: Lalezar, sans-serif;
+          display: flex;
+          justify-content: flex-start;
+        }
+
+        .price {
+          font-size: 20px;
+          color: #000000;
+          font-family:  Lalezar, sans-serif;
+          display: flex;
+          justify-content: flex-start;
+          margin:0;
+        }
+      }
+    }
+
+    .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.3);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .prev {
+      left: -20px;
+    }
+    .next {
+      right: -20px;
+    }
+  }
+}
+/* 📱 Responsive layout adjustments */
+
+/* 1440px - Laptop lớn */
+@media (max-width: 1440px) {
+  .carousel {
+    width: 85vw;
+    height: 70vh;
+    .menu-track-wrapper {
+      overflow: visible;
+      width: 80%;
+      height: 100%;
+      padding: 20px 0;
+      margin-left: 10px;
+    }
+  }
+
+  .about-us {
+    width: 85vw;
+
+    .about-us-image img {
+      width: 400px;
+      height: 520px;
+      margin-top: 20px;
+    }
+
+    .about-us-content {
+      h2 { font-size: 42px; }
+      p { font-size: 18px; }
+    }
+  }
+
+  .menu {
+    width: 950px;
+
+    .menu-item {
+      img { height: 270px; }
+      .name-product { font-size: 22px; }
+    }
+  }
+}
+
+/* 1024px - Laptop nhỏ, tablet ngang */
+@media (max-width: 1024px) {
+  .carousel {
+    height: 60vh;
+  }
+
+  .about-us {
+    gap: 20px;
+
+    .about-us-image img {
+      width: 350px;
+      height: 480px;
+    }
+
+    .about-us-content {
+      h2 { font-size: 38px; }
+      p { font-size: 17px; }
+    }
+  }
+
+  .menu {
+    width: 90vw;
+
+    .menu-track {
+      gap: 15px;
+    }
+
+    .menu-item {
+      flex: 0 0 calc(94% / 2);
+      max-width: calc(100% / 2);
+
+      img {
+        height: 250px;
+      }
+    }
+  }
+}
+
+@media (max-width: 769px) {
+  .carousel {
+    width: 95vw;
+    height: 55vh;
+  }
+
+  .about-us {
+    flex-direction: column;
+    height: auto;
+    text-align: center;
+
+
+    .about-us-image img {
+      display: none;
+    }
+
+    .about-us-content {
+      width: 100%;
+      align-items: center;
+
+      h2 {
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 16px;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+    }
+
+    .about-us-pictures {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 1rem;
+      width: 95vw !important;
+
+      .signature {
+        width: 200px !important;
+        border-radius: 10px;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .menu {
+    width: 90vw;
+    height: auto;
+
+    .menu-item {
+      flex: 0 0 calc(61% / 2) !important;
+      max-width: 100% !important;
+      img {
+        height: 200px !important;
+      }
+    }
+
+    .nav {
+      width: 32px;
+      height: 32px;
+      font-size: 20px;
+    }
+  }
+}
+
+
+/* 425px - Mobile lớn */
+@media (max-width: 426px) {
+  .carousel {
+    height: 40vh;
+  }
+
+  .about-us {
+    flex-direction: column;
+    height: auto;
+    text-align: center;
+
+    .about-us-content {
+      width: 100%;
+      h2 {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+      p {
+        font-size: 15px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+      }
+    }
+
+    .about-us-pictures {
+      display: flex !important;
+      flex-wrap: wrap !important; /* cho phép xuống hàng */
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 10px;
+      margin-top: 1rem;
+      width: 100%;
+
+      /* ép ảnh nằm ngang */
+      .signature {
+        flex: 0 0 45%; /* mỗi ảnh chiếm ~45% hàng */
+        max-width: 45%;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* nếu có ảnh thứ 3, cho nó xuống giữa */
+      .signature:nth-child(3) {
+        flex: 0 0 70%;
+        max-width: 70%;
+      }
+    }
+  }
+  .menu{
+    padding: 0;
+    margin-top: 0;
+    .menu-content{
+      h2{
+        font-size: 35px !important;
+      }
+    }
+    .menu-container {
+      width: 100% !important;
+      .menu-track-wrapper {
+        overflow: visible;
+        width: 100% !important;
+        .menu-track{
+          gap: 10px !important;
+          .menu-item{
+            flex: 0 0 30.5% !important;
+            width: 70% !important;
+            padding: 5px !important;
+            flex-wrap: wrap;
+            img {
+              height: 130px !important;
+            }
+            .info{
+              .name-product {
+                font-size: 17px !important;
+              }
+              .price {
+                font-size: 15px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  }
+
+
+
+/* 320px - Mobile nhỏ */
+@media (max-width: 320px) {
+  .carousel {
+    height: 35vh;
+  }
+
+  .about-us {
+    .about-us-content {
+      h2 { font-size: 24px; }
+      p { font-size: 14px; }
+    }
+  }
+
+  .menu {
+    .menu-content h2 {
+      font-size: 28px;
+    }
+
+    .menu-item {
+      padding: 5px;
+      img { height: 180px; }
+    }
+  }
+}

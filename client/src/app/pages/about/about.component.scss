@@ -1,0 +1,132 @@
+.about-banner {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+
+  .banner-video {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    display: block;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 80px;
+    color: #fff;
+
+    .text-content {
+      max-width: 500px;
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+.our-story {
+  text-align: center;
+  padding: 80px 10%;
+  background: #fff;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+
+    .story-card {
+      text-align: left;
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: #555;
+      }
+    }
+  }
+}
+
+.our-team {
+  background: #f8f8f8;
+  text-align: center;
+  padding: 80px 10%;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 50px;
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    justify-items: center;
+  }
+
+  .team-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 220px;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #ddd;
+      margin: 0 auto 15px;
+    }
+
+    h4 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    a {
+      color: #ff9900;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

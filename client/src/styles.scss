@@ -1,0 +1,21 @@
+html, body {
+  overflow: auto;
+  height: 100%;
+  width:  100%;
+  margin: 0;
+
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+
+html {
+  scrollbar-width: none;
+}
+
+
+body {
+  -ms-overflow-style: none;
+}
