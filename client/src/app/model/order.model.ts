@@ -10,6 +10,7 @@ export interface OrderModel {
     email: string;
   };
   status: boolean;
+  isPaided: boolean;
   note: string;
   orderDetailId: string;
   createdAt?: string;

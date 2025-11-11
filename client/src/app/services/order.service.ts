@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, forkJoin, map, Observable, of, switchMap } from "rxjs";
+import { catchError, finalize, forkJoin, map, Observable, of, switchMap } from "rxjs";
 import { OrderDetailModel, OrderModel } from "../model/order.model";
 
 @Injectable({
@@ -35,6 +35,7 @@ export class OrderService {
           email: order.employee.email,
         },
         status: order.status,
+        isPaided: order.isPayment,
         note: order.note || 'No',
         orderDetailId: order.orderDetail_id,
         createdAt: order.createdAt,
