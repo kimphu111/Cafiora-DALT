@@ -196,12 +196,11 @@
     }
 
     .menu-track-wrapper {
-      overflow: visible; /* ✅ cho hover thoát ra ngoài */
+      overflow: visible;
       width: 100%;
       height: 100%;
       padding: 20px 0;
       margin-left: 10px;
-
     }
 
     .menu-track {
@@ -320,6 +319,268 @@
     }
     .next {
       right: -20px;
+    }
+  }
+}
+/* 📱 Responsive layout adjustments */
+
+/* 1440px - Laptop lớn */
+@media (max-width: 1440px) {
+  .carousel {
+    width: 85vw;
+    height: 70vh;
+    .menu-track-wrapper {
+      overflow: visible;
+      width: 80%;
+      height: 100%;
+      padding: 20px 0;
+      margin-left: 10px;
+    }
+  }
+
+  .about-us {
+    width: 85vw;
+
+    .about-us-image img {
+      width: 400px;
+      height: 520px;
+      margin-top: 20px;
+    }
+
+    .about-us-content {
+      h2 { font-size: 42px; }
+      p { font-size: 18px; }
+    }
+  }
+
+  .menu {
+    width: 950px;
+
+    .menu-item {
+      img { height: 270px; }
+      .name-product { font-size: 22px; }
+    }
+  }
+}
+
+/* 1024px - Laptop nhỏ, tablet ngang */
+@media (max-width: 1024px) {
+  .carousel {
+    height: 60vh;
+  }
+
+  .about-us {
+    gap: 20px;
+
+    .about-us-image img {
+      width: 350px;
+      height: 480px;
+    }
+
+    .about-us-content {
+      h2 { font-size: 38px; }
+      p { font-size: 17px; }
+    }
+  }
+
+  .menu {
+    width: 90vw;
+
+    .menu-track {
+      gap: 15px;
+    }
+
+    .menu-item {
+      flex: 0 0 calc(94% / 2);
+      max-width: calc(100% / 2);
+
+      img {
+        height: 250px;
+      }
+    }
+  }
+}
+
+@media (max-width: 769px) {
+  .carousel {
+    width: 95vw;
+    height: 55vh;
+  }
+
+  .about-us {
+    flex-direction: column;
+    height: auto;
+    text-align: center;
+
+
+    .about-us-image img {
+      display: none;
+    }
+
+    .about-us-content {
+      width: 100%;
+      align-items: center;
+
+      h2 {
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 16px;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+    }
+
+    .about-us-pictures {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 1rem;
+      width: 95vw !important;
+
+      .signature {
+        width: 200px !important;
+        border-radius: 10px;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .menu {
+    width: 90vw;
+    height: auto;
+
+    .menu-item {
+      flex: 0 0 calc(61% / 2) !important;
+      max-width: 100% !important;
+      img {
+        height: 200px !important;
+      }
+    }
+
+    .nav {
+      width: 32px;
+      height: 32px;
+      font-size: 20px;
+    }
+  }
+}
+
+
+/* 425px - Mobile lớn */
+@media (max-width: 426px) {
+  .carousel {
+    height: 40vh;
+  }
+
+  .about-us {
+    flex-direction: column;
+    height: auto;
+    text-align: center;
+
+    .about-us-content {
+      width: 100%;
+      h2 {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+      p {
+        font-size: 15px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+      }
+    }
+
+    .about-us-pictures {
+      display: flex !important;
+      flex-wrap: wrap !important; /* cho phép xuống hàng */
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 10px;
+      margin-top: 1rem;
+      width: 100%;
+
+      /* ép ảnh nằm ngang */
+      .signature {
+        flex: 0 0 45%; /* mỗi ảnh chiếm ~45% hàng */
+        max-width: 45%;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* nếu có ảnh thứ 3, cho nó xuống giữa */
+      .signature:nth-child(3) {
+        flex: 0 0 70%;
+        max-width: 70%;
+      }
+    }
+  }
+  .menu{
+    padding: 0;
+    margin-top: 0;
+    .menu-content{
+      h2{
+        font-size: 35px !important;
+      }
+    }
+    .menu-container {
+      width: 100% !important;
+      .menu-track-wrapper {
+        overflow: visible;
+        width: 100% !important;
+        .menu-track{
+          gap: 10px !important;
+          .menu-item{
+            flex: 0 0 30.5% !important;
+            width: 70% !important;
+            padding: 5px !important;
+            flex-wrap: wrap;
+            img {
+              height: 130px !important;
+            }
+            .info{
+              .name-product {
+                font-size: 17px !important;
+              }
+              .price {
+                font-size: 15px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  }
+
+
+
+/* 320px - Mobile nhỏ */
+@media (max-width: 320px) {
+  .carousel {
+    height: 35vh;
+  }
+
+  .about-us {
+    .about-us-content {
+      h2 { font-size: 24px; }
+      p { font-size: 14px; }
+    }
+  }
+
+  .menu {
+    .menu-content h2 {
+      font-size: 28px;
+    }
+
+    .menu-item {
+      padding: 5px;
+      img { height: 180px; }
     }
   }
 }

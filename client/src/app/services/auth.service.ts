@@ -2,6 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface LoginResponse {
+  accessToken: string;
+  role: string;
+  username: string;
+  success: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,45 +18,30 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 Hàm đăng nhập có gửi kèm credentials và log phản hồi
-  login(email: string, password: string): Observable<any> {
+  login(email: string, password: string): Observable<LoginResponse> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
 
-    return new Observable((observer) => {
-      this.http.post(
-        `${this.apiUrl}/login`,
-        { email, password },
-        {
-          headers: headers,
-          withCredentials: true,
-        }
-      ).subscribe({
-        next: (res) => {
-          console.log('Phản hồi đăng nhập:', res);
-          observer.next(res);
-          observer.complete();
-        },
-        error: (err) => {
-          console.error('Lỗi đăng nhập:', err);
-          observer.error(err);
-        }
-      });
-    });
+    return this.http.post<LoginResponse>(
+      `${this.apiUrl}/login`,
+      { email, password },
+      {
+        headers: headers,
+        withCredentials: true
+      }
+    );
   }
 
-
-  // 🔐 Hàm đăng ký có token
   register(data: any): Observable<any> {
-    const token = localStorage.getItem('token') || '';
+    const token = localStorage.getItem('accessToken') || ''; // lấy accessToken
 
     return this.http.post(`${this.apiUrlCashier}/cashierRegister`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      withCredentials: true // gửi cookie/session kèm nếu cần
+      withCredentials: true // gửi cookie/session kèm
     });
   }
 }
