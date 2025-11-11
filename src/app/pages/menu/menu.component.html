@@ -1,0 +1,28 @@
+<div *ngIf="loading" class="loading-state">
+  <p>Đang tải thực đơn...</p>
+</div>
+
+<div *ngIf="error" class="error-state">
+  <p>{{ error }}</p>
+</div>
+
+<div *ngIf="!loading && !error" class="menu-wrapper">
+
+  <h2 class="menu-heading">☕ Hôm nay bạn muốn dùng gì nhỉ ? </h2>
+
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let p of products" (click)="selectProduct(p)">
+      <div class="image-box">
+        <img [src]="p.urlImage" [alt]="p.nameProduct" (error)="onImgError($event)">
+      </div>
+      <div class="card-body">
+        <h3 class="product-name">{{ p.nameProduct }}</h3>
+        <p class="price">{{ p.price | number:'1.0-0' }} ₫</p>
+        <span class="badge" [class.available]="p.status" [class.soldout]="!p.status">
+          {{ p.status ? 'Còn bán' : 'Hết hàng' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>
