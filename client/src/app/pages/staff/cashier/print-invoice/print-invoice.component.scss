@@ -62,9 +62,6 @@ h2, h3 {
       padding: 5px;
       box-sizing: border-box ;
     }
-    // td {
-    //   &:nth-child(3) {text-align: center;}
-    // }
     tfoot {
       :nth-child(1){text-align: end;}
       :nth-child(2){text-align: start;}
