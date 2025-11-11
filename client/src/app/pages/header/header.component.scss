@@ -1,9 +1,13 @@
 header {
   background-color: #f8f9fa;
   padding: 10px 100px;
-  border-bottom: 1px solid #e0e0e0;
   height: 80px;
   font-family: 'Lalezar', cursive;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  margin-bottom: 20px;
+  //border-bottom: 2px solid #000000 !important;
 
   .navbar {
     display: flex;
@@ -12,80 +16,85 @@ header {
     height: 100%;
     padding: 0 40px;
 
+    /* ===== Logo ===== */
     .nav-brand {
       width: 100px;
-      object-fit: contain;
       cursor: pointer;
-      display: inline-block; // giữ kích thước bao quanh logo
 
       img {
         width: 100%;
         height: auto;
-        transition: transform 0.3s ease-out;
+        transition: transform 0.3s ease;
       }
 
-      img:hover {
+      &:hover img {
         transform: scale(1.1);
       }
     }
 
+    /* ===== Menu Links ===== */
     .nav-links {
       list-style: none;
       display: flex;
       align-items: center;
-      gap: 10px;
-      height: 100%;
-      font-size: 24px;
-      position: relative;
+      gap: 20px;
+      font-size: 22px;
+      margin: 0;
+      transition: all 0.3s ease-in-out;
 
       li {
-        display: flex;
-        align-items: center;
+        position: relative;
 
         a {
           text-decoration: none;
           color: #333;
           font-weight: 500;
           position: relative;
-          transition:
-            0.3s ease,
-            transform 0.3s ease;
+          transition: color 0.3s ease;
+
+          /* Hiệu ứng gạch chân mượt */
+          &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 0%;
+            height: 2px;
+            background-color: #6f4e37;
+            transition: width 0.3s ease;
+          }
 
           &:hover {
             color: #6f4e37;
-            transform: translateY(-3px);
+          }
+
+          &:hover::after {
+            width: 100%;
           }
         }
-      }
 
-      .active-link {
-        color: #6f4e37;
-        font-weight: 600;
+        /* Link đang active (đang ở trang đó) */
+        .active-link {
+          color: #6f4e37;
+          font-weight: 600;
 
-        &::after {
-          content: '';
-          position: absolute;
-          left: 0;
-          bottom: -3px;
-          width: 100%;
-          height: 2px;
-          background-color: #6f4e37;
-          border-radius: 2px;
+          &::after {
+            width: 100%;
+          }
         }
       }
     }
 
-    .nav-actions {
-      background-color: #333333;
+    /* ===== Login Button ===== */
+    .login {
+      background-color: #333;
       width: 150px;
       height: 50px;
       border-radius: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
-      transition:
-        transform 0.3s ease,
-        background-color 0.3s ease;
+      transition: transform 0.3s ease, background-color 0.3s ease;
 
       &:hover {
         background-color: #6f4e37;
@@ -94,42 +103,128 @@ header {
 
       a {
         text-decoration: none;
-        color: #ffffff;
+        color: #fff;
         font-weight: 500;
-        transition: color 0.3s ease;
+      }
+    }
 
-        &:hover {
-          color: #ffffff;
-        }
+    /* ===== Hamburger Icon ===== */
+    .menu-toggle {
+      display: none;
+      font-size: 28px;
+      color: #333;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
       }
     }
   }
+}
 
-  .login{
-    background-color: #333333;
-    width: 150px;
-    height: 50px;
-    border-radius: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition:
-      transform 0.3s ease,
-      background-color 0.3s ease;
+/* ===== Tablet (≤1024px) ===== */
+@media (max-width: 1024px) {
+  header {
+    padding: 10px 40px;
 
-    &:hover {
-      background-color: #6f4e37;
-      transform: translateY(-3px);
+    .navbar {
+      padding: 0 20px;
+
+      .nav-links {
+        font-size: 18px;
+        gap: 12px;
+      }
+
+      .login {
+        width: 120px;
+        height: 45px;
+      }
     }
+  }
+}
 
-    a {
-      text-decoration: none;
-      color: #ffffff;
-      font-weight: 500;
-      transition: color 0.3s ease;
+/* ===== Mobile (≤769px) ===== */
+@media (max-width: 769px) {
+  header {
+    padding: 10px 20px;
+    height: auto;
 
-      &:hover {
-        color: #ffffff;
+    .navbar {
+      padding: 0;
+      flex-wrap: wrap;
+
+      /* Hiện icon menu */
+      .menu-toggle {
+        display: block;
+        position: absolute;
+        right: 10px;
+      }
+
+      /* Menu xổ xuống */
+      .nav-links {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        width: 150px;
+        background-color: rgba(255, 255, 255, 0.95);
+        position: absolute;
+        top: 80px;
+        right: 20px;
+        border-radius: 5px;
+        padding: 0 !important;
+        z-index: 999;
+        border: 2px solid #5e4023;
+        gap:0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+
+        li {
+          width: 100%;
+          text-align: center;
+          padding: 8px 0;
+          border-bottom: 1px solid #ccc;
+
+          a {
+            font-size: 18px;
+            color: #333;
+            position: relative;
+            transition: color 0.3s ease;
+
+            &::after {
+              content: '';
+              position: absolute;
+              left: 0;
+              bottom: -3px;
+              width: 0%;
+              height: 2px;
+              background-color: #6f4e37;
+              transition: width 0.3s ease;
+            }
+
+            &:hover {
+              color: #6f4e37;
+            }
+
+            &:hover::after {
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      /* Khi menu mở */
+      .nav-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      /* Ẩn nút login */
+      .login {
+        display: none;
       }
     }
   }
