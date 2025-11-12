@@ -37,7 +37,7 @@ export class LoginComponent {
           if (res.role === 'barista') {
             this.router.navigate(['/barista']);
           } else if (res.role === 'cashier') {
-            this.router.navigate(['/register']);
+            this.router.navigate(['/cashier/edit-drink']);
           } else if (res.role === 'user') {
             this.router.navigate(['/home']);
           } else if (res.role === 'waiter') {

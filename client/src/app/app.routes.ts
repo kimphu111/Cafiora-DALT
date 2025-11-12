@@ -12,6 +12,7 @@ import { WaiterComponent } from './pages/staff/waiter/waiter.component';
 import { CreateAccountComponent } from './pages/staff/cashier/create-account/create-account.component';
 import { ViewRevenueComponent } from './pages/staff/cashier/view-revenue/view-revenue.component';
 import { PrintInvoiceComponent } from './pages/staff/cashier/print-invoice/print-invoice.component';
+import {EditDrinksComponent} from './pages/staff/cashier/edit-drinks/edit-drinks.component';
 export const routes: Routes = [
   {
     path: '',
@@ -25,7 +26,7 @@ export const routes: Routes = [
     ],
   },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  // { path: 'register', component: RegisterComponent },
   { path :'waiter', component: WaiterComponent},
 
   { path :'barista/:status',
@@ -39,7 +40,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'view-revenue', pathMatch: 'full'},
       { path: 'create-account', component: CreateAccountComponent },
       { path: 'view-revenue', component: ViewRevenueComponent },
-      { path: 'print-invoice', component: PrintInvoiceComponent }
+      { path: 'print-invoice', component: PrintInvoiceComponent },
+      { path: 'edit-drink', component: EditDrinksComponent},
     ]
    },
   { path: '**', redirectTo: 'home' },

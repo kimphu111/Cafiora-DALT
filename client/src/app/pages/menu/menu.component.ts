@@ -10,6 +10,7 @@ interface Product {
   price: number;
   status: boolean;
   urlImage: string;
+  category: string;
 }
 
 @Component({
@@ -27,11 +28,21 @@ export class MenuComponent implements OnInit {
   tables = [1, 2, 3, 4, 5, 6, 7, 8];
   selectedTable: number | null = null;
   note = '';
+  searchTerm: string = '';
+  selectedCategory: string = '';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.getProducts();
+  }
+
+  filteredProducts(): Product[] {
+    return this.products.filter(p => {
+      const matchesCategory = this.selectedCategory ? p.category === this.selectedCategory : true;
+      const matchesSearch = p.nameProduct.toLowerCase().includes(this.searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
   }
 
   getProducts() {
