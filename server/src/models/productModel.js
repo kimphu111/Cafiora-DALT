@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema(
   {
     nameProduct: {
       type: String,
-      required: [true, 'please add the product name'],
+      required: [true, "please add the product name"],
     },
     price: {
       type: Number,
@@ -14,9 +14,13 @@ const schema = new mongoose.Schema(
       type: Boolean, // true = còn hàng, false = hết hàng
       default: true,
     },
+    category: {
+      type: String, // true = còn hàng, false = hết hàng
+      default: null,
+    },
     urlImage: {
       type: String,
-      required: [true, 'please add the product image'],
+      required: [true, "please add the product image"],
     },
   },
   {
@@ -24,4 +28,4 @@ const schema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('products', schema);
+module.exports = mongoose.model("products", schema);

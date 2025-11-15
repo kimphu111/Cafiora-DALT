@@ -23,7 +23,7 @@ const GetAllData = asyncHandler(async (req, res) => {
 //@access private
 const uploadProduct = asyncHandler(async (req, res) => {
   try {
-    const { nameProduct, price } = req.body;
+    const { nameProduct, price, category } = req.body;
     const fileImage = req.image || null;
 
     if (!fileImage) {
@@ -41,6 +41,7 @@ const uploadProduct = asyncHandler(async (req, res) => {
     const product = await Product.create({
       nameProduct,
       price: Number(price),
+      category: req.body.category || null,
       status: true,
       urlImage: imageUrl,
     });
@@ -69,7 +70,7 @@ const uploadProduct = asyncHandler(async (req, res) => {
 const updateProduct = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
-    const { nameProduct, price } = req.body;
+    const { nameProduct, price, category } = req.body;
     const fileImage = req.image || null;
     const imageUrl = fileImage ? fileImage.path : null; // URL của image (ảnh)
 
@@ -91,6 +92,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     // Chỉ thêm vào updateData những field nào có dữ liệu
     const updateData = {};
     if (nameProduct) updateData.nameProduct = nameProduct;
+    if (category) updateData.category = category;
     if (price) updateData.price = Number(price);
     if (imageUrl) updateData.urlImage = imageUrl;
 
