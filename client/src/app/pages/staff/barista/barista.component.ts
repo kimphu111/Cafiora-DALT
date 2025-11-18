@@ -45,6 +45,7 @@ export class BaristaComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOrderDetailId();
+    
     this.loadOrdersWithDetails();
     this.getDetail('69058f5d0d8233402768ab4f');
   }
