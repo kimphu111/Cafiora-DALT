@@ -21,8 +21,8 @@ export class BaristaComponent implements OnInit {
 
   orders: OrderModel[] = [];
   status = signal<'new' | 'completed'>('new');
-  currentTab: string = 'new'; 
-  
+  currentTab: string = 'new';
+
   tableRows: Array<{
     orderId: string;
     createdAt: number;
@@ -50,9 +50,9 @@ export class BaristaComponent implements OnInit {
     this.getDetail('69058f5d0d8233402768ab4f');
   }
 
-  getDetail(id: string) {
-    this.http.get(`http://localhost:8000/api/barista/getOrderDetail/${id}`).subscribe({next: res => console.log(res)})
-  }
+  // getDetail(id: string) {
+  //   this.http.get(`http://localhost:8000/api/barista/getOrderDetail/${id}`).subscribe({next: res => console.log(res)})
+  // }
 
   toggleMode() {
     const next = this.status() === 'new' ? 'completed' : 'new';
@@ -64,7 +64,7 @@ export class BaristaComponent implements OnInit {
       next: res => {
         if (res && Array.isArray(res)) {
           const orderDetailIds = res.map(order => order.orderDetailId);
-          console.log(orderDetailIds);
+          // console.log(orderDetailIds);
           const orderDetailRequests = orderDetailIds.map(id => this.orderService.getOrderDetail(id));
 
           forkJoin(orderDetailRequests).subscribe({
@@ -158,11 +158,27 @@ export class BaristaComponent implements OnInit {
     console.log('Marked done (local):', this.tableRows[i]);
   }
 
+
+
+  getDetail(id: string) {
+    const token = localStorage.getItem('accessToken') || '';
+    const headers = { Authorization: `Bearer ${token}` };
+
+    this.http.get(`http://localhost:8000/api/barista/getOrderDetail/${id}`, { headers })
+      .subscribe({
+        next: res => console.log(res),
+        error: err => console.error('Lỗi lấy chi tiết đơn hàng:', err)
+      });
+  }
+
+
+
+
   // helper debug: log tất cả items không có productName
   logMissingProductNames() {
     const misses = this.tableRows.filter(r => !r.productName);
     console.log('items missing productName:', misses);
   }
 
-  
+
 }

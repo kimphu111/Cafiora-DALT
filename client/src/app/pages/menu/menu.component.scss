@@ -1,5 +1,53 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+.sort-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px; // khoảng cách giữa 2 select
+  margin: 30px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  font-family: 'Lalezar', cursive;
+  width: fit-content;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    font-size: 1rem;
+
+    .selectType {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;           // bo tròn hơn
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      font-family: 'Poppins', sans-serif;
+      min-width: 180px;
+      cursor: pointer;
+      transition: all 0.25s ease-in-out;
+      background-color: #fff;
+      appearance: none;              // bỏ mặc định arrow của browser
+      position: relative;
+
+      &:hover {
+        border-color: #4a90e2;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: #4a90e2;
+        box-shadow: 0 0 6px rgba(74, 144, 226, 0.4);
+      }
+    }
+  }
+}
+
+
+
 .menu-wrapper {
   font-family: 'Poppins', sans-serif;
   padding: 40px 60px;

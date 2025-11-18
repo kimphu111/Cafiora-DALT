@@ -109,23 +109,36 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
 
+
   nextMenu() {
-    const maxIndex = Math.ceil(this.products.length / this.itemsPerPage) ;
+    const maxIndex = this.products.length - this.itemsPerPage;
     if (this.currentMenuIndex < maxIndex) {
       this.currentMenuIndex++;
     } else {
-      this.currentMenuIndex = 0;
+      this.currentMenuIndex = 0; // nếu muốn loop
     }
+    this.updateMenuTrack();
   }
 
   prevMenu() {
-    const maxIndex = Math.ceil(this.products.length / this.itemsPerPage) ;
+    const maxIndex = this.products.length - this.itemsPerPage;
     if (this.currentMenuIndex > 0) {
       this.currentMenuIndex--;
     } else {
-      this.currentMenuIndex = maxIndex;
+      this.currentMenuIndex = maxIndex; // nếu muốn loop
     }
+    this.updateMenuTrack();
   }
+
+  updateMenuTrack() {
+    const track = document.querySelector('.menu-track') as HTMLElement;
+    const item = document.querySelector('.menu-item') as HTMLElement;
+    const gap = 60;
+    const itemWidth = item.offsetWidth + gap;
+
+    track.style.transform = `translateX(-${this.currentMenuIndex * itemWidth}px)`;
+  }
+
 
   selectProduct(product: Product){
     this.router.navigate(['/menu']);

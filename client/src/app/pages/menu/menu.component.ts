@@ -22,14 +22,14 @@ interface Product {
 })
 export class MenuComponent implements OnInit {
   products: Product[] = [];
+  filteredProducts: Product[] = [];
   cart: { product: Product; quantity: number }[] = [];
   loading = false;
   error = '';
-  tables = [1, 2, 3, 4, 5, 6, 7, 8];
-  selectedTable: number | null = null;
-  note = '';
-  searchTerm: string = '';
+
+  categories: string[] = ['Coffee', 'Tea', 'Juice', 'Food', 'Other'];
   selectedCategory: string = '';
+  selectedPriceSort: string = '';
 
   constructor(private http: HttpClient) {}
 
@@ -37,19 +37,12 @@ export class MenuComponent implements OnInit {
     this.getProducts();
   }
 
-  filteredProducts(): Product[] {
-    return this.products.filter(p => {
-      const matchesCategory = this.selectedCategory ? p.category === this.selectedCategory : true;
-      const matchesSearch = p.nameProduct.toLowerCase().includes(this.searchTerm.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-  }
-
   getProducts() {
     this.loading = true;
     this.http.get<any>('http://localhost:8000/api/getProduct').subscribe({
       next: (res) => {
         this.products = res.dataProduct || [];
+        this.filteredProducts = [...this.products];
         this.loading = false;
       },
       error: (err) => {
@@ -58,6 +51,24 @@ export class MenuComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  filterProducts() {
+    let temp = [...this.products];
+
+    // Lọc theo category
+    if (this.selectedCategory) {
+      temp = temp.filter(p => p.category === this.selectedCategory);
+    }
+
+    // Sắp xếp theo giá
+    if (this.selectedPriceSort === 'asc') {
+      temp.sort((a, b) => a.price - b.price);
+    } else if (this.selectedPriceSort === 'desc') {
+      temp.sort((a, b) => b.price - a.price);
+    }
+
+    this.filteredProducts = temp;
   }
 
   onImgError(event: Event) {
@@ -73,6 +84,5 @@ export class MenuComponent implements OnInit {
       this.cart.push({ product, quantity: 1 });
     }
   }
-
-
 }
+

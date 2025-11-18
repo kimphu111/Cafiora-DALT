@@ -93,7 +93,7 @@ export class OrderService {
 
         // Chạy tất cả request song song và gán kết quả vào orders
         return forkJoin(orderDetailsRequests).pipe(
-          map(details => 
+          map(details =>
             orders.map((order, index) => ({
               ...order,
               orderDetails: details[index]
@@ -103,5 +103,12 @@ export class OrderService {
       })
     );
   }
-  
+
+
+  //Cap nhat trang thai don hang
+  updateOrderStatus(orderId: string, body: any) {
+    const token = localStorage.getItem('accessToken') || '';
+    const headers = { Authorization: `Bearer ${token}` };
+    return this.http.put(`http://localhost:8000/api/barista/updateOrderStatus/${orderId}`, body, { headers });
+  }
 }

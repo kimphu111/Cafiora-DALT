@@ -63,36 +63,45 @@ export class WaiterComponent implements OnInit {
     target.src = 'assets/no-image.png';
   }
 
-
+  // === Getter/Setter đã fix ===
   get cart() {
     if (!this.selectedTable) return [];
-    return this.cartByTable[this.selectedTable]?.cart || [];
+    return this.cartByTable[this.selectedTable]?.cart ?? [];
   }
 
   set cart(val: { product: Product; quantity: number }[]) {
     if (!this.selectedTable) return;
+    if (!this.cartByTable[this.selectedTable]) {
+      this.cartByTable[this.selectedTable] = { cart: [], note: '', customerName: '' };
+    }
     this.cartByTable[this.selectedTable].cart = val;
     this.saveLocal();
   }
 
   get note() {
     if (!this.selectedTable) return '';
-    return this.cartByTable[this.selectedTable].note;
+    return this.cartByTable[this.selectedTable]?.note ?? '';
   }
 
   set note(val: string) {
     if (!this.selectedTable) return;
+    if (!this.cartByTable[this.selectedTable]) {
+      this.cartByTable[this.selectedTable] = { cart: [], note: '', customerName: '' };
+    }
     this.cartByTable[this.selectedTable].note = val;
     this.saveLocal();
   }
 
   get customerName() {
     if (!this.selectedTable) return '';
-    return this.cartByTable[this.selectedTable].customerName;
+    return this.cartByTable[this.selectedTable]?.customerName ?? '';
   }
 
   set customerName(val: string) {
     if (!this.selectedTable) return;
+    if (!this.cartByTable[this.selectedTable]) {
+      this.cartByTable[this.selectedTable] = { cart: [], note: '', customerName: '' };
+    }
     this.cartByTable[this.selectedTable].customerName = val;
     this.saveLocal();
   }
@@ -156,7 +165,6 @@ export class WaiterComponent implements OnInit {
 
   async selectTable(t: number) {
     if (this.tableStatus[t]) {
-      // Bàn đã có khách
       const action = await this.confirmPopup(
         `Bàn ${t} đã có khách. Nhấn OK để xóa bàn hoặc Hủy để xem order cũ.`,
         t
@@ -178,7 +186,6 @@ export class WaiterComponent implements OnInit {
         return;
       }
 
-      // Chọn bàn mới để tạo order
       this.selectedTable = t;
       this.cartByTable[t] = { cart: [], note: '', customerName: '' };
       this.tableStatus[t] = true;
@@ -192,19 +199,48 @@ export class WaiterComponent implements OnInit {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (res: any) => {
-        this.cartByTable[tableNumber] = {
-          cart: res.items.map((i: any) => ({
-            product: { _id: i.product_id, nameProduct: i.name, price: i.unit_price, urlImage: i.urlImage, status: true },
+        if (!res) return;
+
+        // tạo object nếu chưa tồn tại
+        if (!this.cartByTable[tableNumber]) {
+          this.cartByTable[tableNumber] = { cart: [], note: '', customerName: '' };
+        }
+
+        const items = Array.isArray(res.items) ? res.items : [];
+
+        // Chỉ update cart nếu có items
+        if (items.length > 0) {
+          this.cartByTable[tableNumber].cart = items.map((i: any) => ({
+            product: {
+              _id: i.product_id,
+              nameProduct: i.name,
+              price: i.unit_price,
+              urlImage: i.urlImage || 'assets/no-image.png',
+              status: true
+            },
             quantity: i.quantity
-          })),
-          note: res.note || '',
-          customerName: res.customer_name
-        };
+          }));
+        }
+
+        // Luôn cập nhật note và customerName
+        this.cartByTable[tableNumber].note = res.note || '';
+        this.cartByTable[tableNumber].customerName = res.customer_name || '';
+
+        // Reset bàn **chỉ khi order done**
+        if (res.status === true) {
+          this.tableStatus[tableNumber] = false;
+          delete this.cartByTable[tableNumber];
+        } else {
+          this.tableStatus[tableNumber] = true;
+        }
+
         this.saveLocal();
       },
       error: (err) => console.error('Lỗi lấy order', err)
     });
   }
+
+
 
   resetCurrentTable() {
     if (!this.selectedTable) return;
@@ -212,10 +248,7 @@ export class WaiterComponent implements OnInit {
     this.saveLocal();
   }
 
-
-
-
-  // popup variables
+  // === Popup ===
   showConfirmPopup = false;
   popupTableNumber: number | null = null;
   popupMessage = '';
@@ -244,6 +277,7 @@ export class WaiterComponent implements OnInit {
     }
     this.closePopup();
   }
+
   closePopup() {
     this.showConfirmPopup = false;
     this.popupTableNumber = null;
