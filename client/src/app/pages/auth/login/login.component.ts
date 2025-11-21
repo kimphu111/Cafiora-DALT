@@ -35,9 +35,9 @@ export class LoginComponent {
           localStorage.setItem('username', res.username);
 
           if (res.role === 'barista') {
-            this.router.navigate(['/barista']);
+            this.router.navigate(['/barista/new']);
           } else if (res.role === 'cashier') {
-            this.router.navigate(['/register']);
+            this.router.navigate(['/cashier/edit-drink']);
           } else if (res.role === 'user') {
             this.router.navigate(['/home']);
           } else if (res.role === 'waiter') {

@@ -12,6 +12,7 @@ import { WaiterComponent } from './pages/staff/waiter/waiter.component';
 import { CreateAccountComponent } from './pages/staff/cashier/create-account/create-account.component';
 import { ViewRevenueComponent } from './pages/staff/cashier/view-revenue/view-revenue.component';
 import { PrintInvoiceComponent } from './pages/staff/cashier/invoice/print-invoice/print-invoice.component';
+import {EditDrinkComponent} from './pages/staff/cashier/edit-drink/edit-drink.component';
 export const routes: Routes = [
   {
     path: '',
@@ -39,7 +40,9 @@ export const routes: Routes = [
       { path: '', redirectTo: 'view-revenue', pathMatch: 'full'},
       { path: 'create-account', component: CreateAccountComponent },
       { path: 'view-revenue', component: ViewRevenueComponent },
-      { path: 'print-invoice', component: PrintInvoiceComponent }
+      { path: 'print-invoice', component: PrintInvoiceComponent },
+      { path: 'edit-drink', component: EditDrinkComponent }
+
     ]
    },
   { path: '**', redirectTo: 'home' },

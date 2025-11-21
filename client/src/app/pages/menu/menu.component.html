@@ -1,3 +1,22 @@
+<div class="sort-controls">
+  <label>
+    Lọc theo loại:
+    <select [(ngModel)]="selectedCategory" class="selectType" (change)="filterProducts()">
+      <option value="">Tất cả</option>
+      <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+    </select>
+  </label>
+
+  <label>
+    Sắp xếp theo giá:
+    <select [(ngModel)]="selectedPriceSort" class="selectType" (change)="filterProducts()">
+      <option value="">Mặc định</option>
+      <option value="asc">Giá thấp → cao</option>
+      <option value="desc">Giá cao → thấp</option>
+    </select>
+  </label>
+</div>
+
 <div *ngIf="loading" class="loading-state">
   <p>Đang tải thực đơn...</p>
 </div>
@@ -7,11 +26,10 @@
 </div>
 
 <div *ngIf="!loading && !error" class="menu-wrapper">
-
   <h2 class="menu-heading">☕ Hôm nay bạn muốn dùng gì nhỉ ? </h2>
 
   <div class="product-grid">
-    <div class="product-card" *ngFor="let p of products" (click)="selectProduct(p)">
+    <div class="product-card" *ngFor="let p of filteredProducts" (click)="selectProduct(p)">
       <div class="image-box">
         <img [src]="p.urlImage" [alt]="p.nameProduct" (error)="onImgError($event)">
       </div>
@@ -24,5 +42,4 @@
       </div>
     </div>
   </div>
-
 </div>

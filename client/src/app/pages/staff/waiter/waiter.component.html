@@ -1,4 +1,4 @@
-<div *ngIf="!loading && !error" class="container">
+<div class="container">
 
   <!-- PANEL TRÁI: DANH SÁCH MÓN -->
   <div class="menu-panel">
@@ -13,12 +13,16 @@
     </div>
   </div>
 
-  <!-- PANEL PHẢI: GIỎ HÀNG -->
+  <!-- PANEL PHẢI: GIỎ HÀNG + CHỌN BÀN -->
   <div class="details-panel">
-    <h2>Chi Tiết Giỏ Hàng</h2>
+    <h2>
+      Chi Tiết Giỏ Hàng
+      <span *ngIf="selectedTable" class="table-indicator"> - Bàn {{ selectedTable }}</span>
+    </h2>
 
-    <div *ngIf="cart.length; else emptyCart">
-      <div class="cart-list">
+    <!-- Giỏ hàng scrollable -->
+    <div class="cart-list-wrapper">
+      <div *ngIf="cart.length; else emptyCart" class="cart-list">
         <div class="cart-item" *ngFor="let item of cart">
           <img [src]="item.product.urlImage" (error)="onImgError($event)">
           <div class="info">
@@ -32,55 +36,67 @@
           </div>
         </div>
       </div>
+      <ng-template #emptyCart>
+        <p class="placeholder-text">Chưa có món nào được chọn.</p>
+      </ng-template>
+    </div>
 
-      <!-- CHỌN BÀN -->
+    <!-- Bottom Section cố định đáy -->
+    <div class="bottom-section">
+
+      <!-- Chọn bàn -->
       <div class="table-selection">
         <h3>Chọn bàn</h3>
-        <div class="table-grid">
-          <div
-            *ngFor="let t of tables"
-            class="table-box"
-            [ngClass]="{ 'selected': tableStatus[t] }"
-            (click)="selectTable(t)"
-          >
-            Bàn {{ t }}
+        <div class="table-grid-wrapper">
+          <div class="table-grid">
+            <div *ngFor="let t of tables"
+                 class="table-box"
+                 [ngClass]="{ 'selected': tableStatus[t] }"
+                 (click)="selectTable(t)">
+              Bàn {{ t }}
+            </div>
           </div>
+          <button *ngIf="selectedTable" (click)="resetCurrentTable()" class="reset-btn">
+            Hoàn tất bàn hiện tại
+          </button>
         </div>
       </div>
 
-      <!-- THÊM PHẦN NHẬP TÊN KHÁCH HÀNG -->
+
+      <!-- Tên khách hàng -->
       <div class="customer-name-section">
         <h3>Tên khách hàng</h3>
-        <input
-          type="text"
-          [(ngModel)]="customerName"
-          placeholder="Nhập tên khách hàng"
-          required
-        />
+        <input type="text" [(ngModel)]="customerName" placeholder="Nhập tên khách hàng"/>
       </div>
 
-      <!-- TỔNG KẾT -->
+      <!-- Ghi chú + tổng kết + nút xác nhận -->
       <div class="cart-summary">
         <div class="summary-row">
           <p><strong>Tổng số món:</strong> {{ totalItems }}</p>
           <p><strong>Tổng tiền:</strong> {{ totalPrice | number:'1.0-0' }} ₫</p>
         </div>
-
         <div class="bottom-row">
-          <textarea
-            id="note"
-            [(ngModel)]="note"
-            placeholder="Ghi chú (VD: Không đá, ít đường...)"
-            rows="2"
-          ></textarea>
-
+          <textarea [(ngModel)]="note" placeholder="Ghi chú (VD: Không đá, ít đường...)" rows="2"></textarea>
           <button class="submit-btn" (click)="submitOrder()">Xác nhận đặt</button>
         </div>
-      </div>
-    </div>
 
-    <ng-template #emptyCart>
-      <p class="placeholder-text">Chưa có món nào được chọn.</p>
-    </ng-template>
+      </div>
+
+      <!-- Confirm Popup -->
+      <div class="popup-overlay" *ngIf="showConfirmPopup">
+        <div class="popup-content">
+          <p class="popup-message">{{ popupMessage }}</p>
+          <div class="popup-actions">
+            <button class="ok-btn" (click)="onPopupOk()">OK</button>
+            <button class="cancel-btn" (click)="onPopupCancel()">Xem order cũ</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+    </div>
   </div>
 </div>

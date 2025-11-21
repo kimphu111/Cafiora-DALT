@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule, DecimalPipe } from '@angular/common';
-import {FormsModule } from "@angular/forms";
-
+import { FormsModule } from "@angular/forms";
 
 interface Product {
   _id: string;
@@ -11,34 +10,42 @@ interface Product {
   status: boolean;
   urlImage: string;
 }
+
+interface TableCart {
+  cart: { product: Product; quantity: number }[];
+  note: string;
+  customerName: string;
+}
+
 @Component({
   selector: 'app-waiter',
-  imports: [CommonModule, DecimalPipe, FormsModule ],
+  imports: [CommonModule, DecimalPipe, FormsModule],
   templateUrl: './waiter.component.html',
-  styleUrl: './waiter.component.scss'
+  styleUrls: ['./waiter.component.scss']
 })
-
 export class WaiterComponent implements OnInit {
   products: Product[] = [];
-  cart: { product: Product; quantity: number }[] = [];
   loading = false;
   error = '';
-  tables = [1, 2, 3, 4, 5, 6, 7, 8];
+
+  tables = [1,2,3,4,5,6,7,8];
   tableStatus: { [key: number]: boolean } = {};
   selectedTable: number | null = null;
-  note = '';
-  customerName = '';
+  currentOrderId: string | null = null;
 
+  cartByTable: { [table: number]: TableCart } = {};
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    const saved = localStorage.getItem('tableStatus');
-    if(saved) {
-      this.tableStatus = JSON.parse(saved);
-    } else {
-      this.tables.forEach(t => this.tableStatus[t] = false);
-    }
+    const savedTableStatus = localStorage.getItem('tableStatus');
+    this.tableStatus = savedTableStatus ? JSON.parse(savedTableStatus) : {};
+    this.tables.forEach(t => {
+      if (!(t in this.tableStatus)) this.tableStatus[t] = false;
+    });
+
+    const savedCartByTable = localStorage.getItem('cartByTable');
+    this.cartByTable = savedCartByTable ? JSON.parse(savedCartByTable) : {};
 
     this.getProducts();
   }
@@ -46,15 +53,8 @@ export class WaiterComponent implements OnInit {
   getProducts() {
     this.loading = true;
     this.http.get<any>('http://localhost:8000/api/getProduct').subscribe({
-      next: (res) => {
-        this.products = res.dataProduct || [];
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Lỗi khi lấy dữ liệu:', err);
-        this.error = 'Không thể tải danh sách sản phẩm.';
-        this.loading = false;
-      }
+      next: (res) => { this.products = res.dataProduct || []; this.loading = false; },
+      error: (err) => { console.error(err); this.error='Không thể tải sản phẩm'; this.loading=false; }
     });
   }
 
@@ -63,17 +63,58 @@ export class WaiterComponent implements OnInit {
     target.src = 'assets/no-image.png';
   }
 
+  // === Getter/Setter đã fix ===
+  get cart() {
+    if (!this.selectedTable) return [];
+    return this.cartByTable[this.selectedTable]?.cart ?? [];
+  }
+
+  set cart(val: { product: Product; quantity: number }[]) {
+    if (!this.selectedTable) return;
+    if (!this.cartByTable[this.selectedTable]) {
+      this.cartByTable[this.selectedTable] = { cart: [], note: '', customerName: '' };
+    }
+    this.cartByTable[this.selectedTable].cart = val;
+    this.saveLocal();
+  }
+
+  get note() {
+    if (!this.selectedTable) return '';
+    return this.cartByTable[this.selectedTable]?.note ?? '';
+  }
+
+  set note(val: string) {
+    if (!this.selectedTable) return;
+    if (!this.cartByTable[this.selectedTable]) {
+      this.cartByTable[this.selectedTable] = { cart: [], note: '', customerName: '' };
+    }
+    this.cartByTable[this.selectedTable].note = val;
+    this.saveLocal();
+  }
+
+  get customerName() {
+    if (!this.selectedTable) return '';
+    return this.cartByTable[this.selectedTable]?.customerName ?? '';
+  }
+
+  set customerName(val: string) {
+    if (!this.selectedTable) return;
+    if (!this.cartByTable[this.selectedTable]) {
+      this.cartByTable[this.selectedTable] = { cart: [], note: '', customerName: '' };
+    }
+    this.cartByTable[this.selectedTable].customerName = val;
+    this.saveLocal();
+  }
+
   selectProduct(product: Product) {
     const existing = this.cart.find(i => i.product._id === product._id);
-    if (existing) {
-      existing.quantity++;
-    } else {
-      this.cart.push({ product, quantity: 1 });
-    }
+    if (existing) existing.quantity++;
+    else this.cart = [...this.cart, { product, quantity: 1 }];
   }
 
   increaseQuantity(item: any) {
     item.quantity++;
+    this.cart = [...this.cart];
   }
 
   decreaseQuantity(item: any) {
@@ -89,67 +130,158 @@ export class WaiterComponent implements OnInit {
     return this.cart.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
   }
 
+  saveLocal() {
+    localStorage.setItem('cartByTable', JSON.stringify(this.cartByTable));
+    localStorage.setItem('tableStatus', JSON.stringify(this.tableStatus));
+  }
+
   submitOrder() {
-    if (!this.cart.length) {
-      alert('Giỏ hàng trống!');
-      return;
-    }
-    if (!this.selectedTable) {
-      alert('Vui lòng chọn bàn!');
+    if (!this.cart.length || !this.selectedTable) {
+      alert('Chọn bàn và thêm sản phẩm!');
       return;
     }
 
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      alert('Bạn cần đăng nhập trước!');
-      return;
-    }
+    const token = localStorage.getItem('accessToken');
+    if (!token) { alert('Bạn cần đăng nhập!'); return; }
 
     const payload = {
       table_number: this.selectedTable,
       note: this.note,
       customer_name: this.customerName,
-      items: this.cart.map(i => ({
-        product_id: i.product._id,
-        quantity: i.quantity,
-        unit_price: i.product.price
-      }))
+      items: this.cart.map(i => ({ product_id: i.product._id, quantity: i.quantity, unit_price: i.product.price }))
     };
 
-
     this.http.post('http://localhost:8000/api/waiter/createOrder', payload, {
-      headers: { Authorization: `Bearer ${token}`}
+      headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (res: any) => {
         alert(res.message || 'Đặt đơn thành công!');
-        this.cart = [];
         this.selectedTable = null;
-        this.note = '';
+        this.currentOrderId = null;
       },
-      error: (err) => {
-        console.error('Lỗi tạo đơn:', err);
-        if (err.status === 401) {
-          alert('Phiên đăng nhập đã hết hạn hoặc bạn chưa đăng nhập!');
-        } else {
-          alert('Lỗi khi gửi đơn hàng!');
-        }
-      }
+      error: (err) => { console.error(err); alert('Lỗi tạo đơn'); }
     });
   }
 
-  selectTable(t: number) {
+  async selectTable(t: number) {
     if (this.tableStatus[t]) {
-      const confirmLeave = confirm(`Khách ở bàn ${t} đã rời đi?`);
-      if (confirmLeave) {
+      const action = await this.confirmPopup(
+        `Bàn ${t} đã có khách. Nhấn OK để xóa bàn hoặc Hủy để xem order cũ.`,
+        t
+      );
+
+      if (action) {
+        // Xóa bàn
         this.tableStatus[t] = false;
-        localStorage.setItem('tableStatus', JSON.stringify(this.tableStatus));
+        this.cartByTable[t] = { cart: [], note: '', customerName: '' };
+        if (this.selectedTable === t) this.selectedTable = null;
+        this.saveLocal();
+      } else {
+        this.selectedTable = t;
+        this.loadExistingOrder(t);
       }
     } else {
-      this.tableStatus[t] = true;
+      if (this.selectedTable && this.selectedTable !== t) {
+        alert(`Bạn đang thao tác bàn ${this.selectedTable}. Hủy bàn trước khi sang bàn khác.`);
+        return;
+      }
+
       this.selectedTable = t;
-      localStorage.setItem('tableStatus', JSON.stringify(this.tableStatus));
+      this.cartByTable[t] = { cart: [], note: '', customerName: '' };
+      this.tableStatus[t] = true;
+      this.saveLocal();
     }
   }
 
+  loadExistingOrder(tableNumber: number) {
+    const token = localStorage.getItem('accessToken') || '';
+    this.http.get(`http://localhost:8000/api/waiter/getOrderByTable/${tableNumber}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe({
+      next: (res: any) => {
+        if (!res) return;
+
+        // tạo object nếu chưa tồn tại
+        if (!this.cartByTable[tableNumber]) {
+          this.cartByTable[tableNumber] = { cart: [], note: '', customerName: '' };
+        }
+
+        const items = Array.isArray(res.items) ? res.items : [];
+
+        // Chỉ update cart nếu có items
+        if (items.length > 0) {
+          this.cartByTable[tableNumber].cart = items.map((i: any) => ({
+            product: {
+              _id: i.product_id,
+              nameProduct: i.name,
+              price: i.unit_price,
+              urlImage: i.urlImage || 'assets/no-image.png',
+              status: true
+            },
+            quantity: i.quantity
+          }));
+        }
+
+        // Luôn cập nhật note và customerName
+        this.cartByTable[tableNumber].note = res.note || '';
+        this.cartByTable[tableNumber].customerName = res.customer_name || '';
+
+        // Reset bàn **chỉ khi order done**
+        if (res.status === true) {
+          this.tableStatus[tableNumber] = false;
+          delete this.cartByTable[tableNumber];
+        } else {
+          this.tableStatus[tableNumber] = true;
+        }
+
+        this.saveLocal();
+      },
+      error: (err) => console.error('Lỗi lấy order', err)
+    });
+  }
+
+
+
+  resetCurrentTable() {
+    if (!this.selectedTable) return;
+    this.selectedTable = null;
+    this.saveLocal();
+  }
+
+  // === Popup ===
+  showConfirmPopup = false;
+  popupTableNumber: number | null = null;
+  popupMessage = '';
+  popupResolve: ((action: boolean) => void) | null = null;
+
+  confirmPopup(message: string, tableNumber: number): Promise<boolean> {
+    this.popupMessage = message;
+    this.popupTableNumber = tableNumber;
+    this.showConfirmPopup = true;
+
+    return new Promise(resolve => {
+      this.popupResolve = resolve;
+    });
+  }
+
+  onPopupOk() {
+    if (this.popupResolve && this.popupTableNumber !== null) {
+      this.popupResolve(true);
+    }
+    this.closePopup();
+  }
+
+  onPopupCancel() {
+    if (this.popupResolve && this.popupTableNumber !== null) {
+      this.popupResolve(false);
+    }
+    this.closePopup();
+  }
+
+  closePopup() {
+    this.showConfirmPopup = false;
+    this.popupTableNumber = null;
+    this.popupMessage = '';
+    this.popupResolve = null;
+  }
 }

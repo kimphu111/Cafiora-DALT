@@ -32,9 +32,16 @@
             "styles": [
               "src/styles.scss"
             ]
+            // Dòng "inlineFonts: false" sai đã được XÓA khỏi đây
           },
           "configurations": {
             "production": {
+              // ĐÃ THÊM KHỐI "optimization" CHÍNH XÁC VÀO ĐÂY
+              "optimization": {
+                "fonts": {
+                  "inline": false
+                }
+              },
               "budgets": [
                 {
                   "type": "initial",

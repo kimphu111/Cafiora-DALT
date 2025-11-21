@@ -188,7 +188,7 @@
     align-items: flex-start;
 
     .menu-container {
-      width: 1000px;
+      width: 850px;
       margin: 0 auto;
       overflow: hidden;
       position: relative;
@@ -196,11 +196,12 @@
     }
 
     .menu-track-wrapper {
-      overflow: visible;
+      //overflow: visible;
       width: 100%;
       height: 100%;
-      padding: 20px 0;
-      margin-left: 10px;
+      overflow: hidden;
+
+      //padding: 20px 0;
     }
 
     .menu-track {
@@ -208,6 +209,7 @@
       transition: transform 0.5s ease;
       gap: 20px;
       height: 100%;
+      flex-wrap: nowrap;
     }
 
     .menu-item {
@@ -450,21 +452,64 @@
   }
 
   .menu {
-    width: 90vw;
+    width: 100%;
     height: auto;
 
-    .menu-item {
-      flex: 0 0 calc(61% / 2) !important;
-      max-width: 100% !important;
-      img {
-        height: 200px !important;
-      }
-    }
+    .menu-carousel {
+      position: relative;
+      display: flex;
+      align-items: center;
 
-    .nav {
-      width: 32px;
-      height: 32px;
-      font-size: 20px;
+      .menu-container {
+        width: 80%;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .menu-track-wrapper {
+        width: 100%;
+      }
+
+      .menu-track {
+        display: flex;
+        flex-wrap: nowrap;
+        transition: transform 0.5s ease;
+      }
+
+      .menu-item {
+        flex: 0 0 30.5%;
+        padding: 5px;
+
+        img {
+          height: 130px;
+          width: 100%;
+          object-fit: cover;
+          border-radius: 6px;
+        }
+
+        .info {
+          .name-product { font-size: 14px; }
+          .price { font-size: 12px; }
+        }
+      }
+
+      .nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        font-size: 18px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 50%;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        z-index: 10;
+
+        &.prev { left: 5px; }   // nút prev bên trong
+        &.next { right: 5px; }  // nút next bên trong
+      }
     }
   }
 }
