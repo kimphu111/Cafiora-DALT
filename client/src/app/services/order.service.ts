@@ -35,7 +35,7 @@ export class OrderService {
           email: order.employee.email,
         },
         status: order.status,
-        isPaided: order.isPayment,
+        isPaid: order.isPayment,
         note: order.note || 'No',
         orderDetailId: order.orderDetail_id,
         createdAt: order.createdAt,
@@ -58,6 +58,7 @@ export class OrderService {
             orderId: orderDetail.order_id,
             items: orderDetail.items.map((item: any) => ({
               productId: item.product_id,
+              productName: item.product_id.nameProduct ?? 'Unknown',
               quantity: item.quantity,
               subtotal: item.subtotal,
               unitPrice: item.unit_price,
@@ -104,6 +105,17 @@ export class OrderService {
     );
   }
 
+  // Lọc theo khoảng ngày (client-side) dựa trên createdAt
+  getOrdersWithDetailsByDateRange(start: Date, end: Date): Observable<OrderModel[]> {
+    const startMs = new Date(start).setHours(0, 0, 0, 0);
+    const endMs = new Date(end).setHours(23, 59, 59, 999);
+    return this.getAllOrdersWithDetails().pipe(
+      map(orders => orders.filter(o => {
+        const t = o.createdAt ? new Date(o.createdAt).getTime() : 0;
+        return t >= startMs && t <= endMs;
+      }))
+    );
+  }
 
   //Cap nhat trang thai don hang
   updateOrderStatus(orderId: string, body: any) {
